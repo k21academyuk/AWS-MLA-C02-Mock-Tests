@@ -1,0 +1,1907 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MLA-C02 Mock Test 3 | K21 Academy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<style>
+html,body{margin:0}
+[hidden]{display:none!important}
+:root{color-scheme:light}
+
+/* Layout: test-centre console. Navy exam bar, question strip, one scrolling question pane, fixed action bar. Start and results screens scroll as documents. */
+:root{
+  --bg:#F4F6F9; --surface:#FFFFFF; --surface-2:#F8F9FB; --border:#E3E6EC; --border-strong:#C9CED8;
+  --text-1:#111827; --text-2:#4B5563; --text-3:#7C8596;
+  --bar:#1A1248; --on-bar:#FFFFFF; --on-bar-dim:#B9B4DA;
+  --primary:#1A1248; --primary-hover:#2E2080; --on-primary:#FFFFFF; --ring:rgba(46,32,128,.25);
+  --green:#8DC63F; --green-mid:#79B030; --green-bg:#F1F8E8; --green-dark:#3D6B15;
+  --flag:#D97706; --flag-bg:#FEF3C7; --flag-text:#8A4B05;
+  --danger:#C2332B; --danger-bg:#FDECEA; --sel-bg:#EEEDFB; --sel-border:#2E2080;
+  --overlay:rgba(17,12,48,.72); --shadow:0 1px 4px rgba(17,24,39,.06);
+  --font:'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --qsize:16px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0F0D22; --surface:#18152F; --surface-2:#1F1B3B; --border:#2E2A52; --border-strong:#47417A;
+  --text-1:#ECEAF6; --text-2:#B9B5D2; --text-3:#8A85AA;
+  --bar:#090716; --on-bar:#FFFFFF; --on-bar-dim:#9F99C8;
+  --primary:#6C5CE0; --primary-hover:#7D6FEA; --on-primary:#FFFFFF; --ring:rgba(140,128,240,.35);
+  --green:#8DC63F; --green-mid:#9BD24F; --green-bg:#1D2B12; --green-dark:#B3E07A;
+  --flag:#F5A524; --flag-bg:#3A2A0C; --flag-text:#F8C46A;
+  --danger:#F07167; --danger-bg:#3A1A1A; --sel-bg:#262054; --sel-border:#9A8FF2;
+  --overlay:rgba(5,4,14,.82); --shadow:0 1px 4px rgba(0,0,0,.4); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0F0D22; --surface:#18152F; --surface-2:#1F1B3B; --border:#2E2A52; --border-strong:#47417A;
+  --text-1:#ECEAF6; --text-2:#B9B5D2; --text-3:#8A85AA;
+  --bar:#090716; --on-bar:#FFFFFF; --on-bar-dim:#9F99C8;
+  --primary:#6C5CE0; --primary-hover:#7D6FEA; --on-primary:#FFFFFF; --ring:rgba(140,128,240,.35);
+  --green:#8DC63F; --green-mid:#9BD24F; --green-bg:#1D2B12; --green-dark:#B3E07A;
+  --flag:#F5A524; --flag-bg:#3A2A0C; --flag-text:#F8C46A;
+  --danger:#F07167; --danger-bg:#3A1A1A; --sel-bg:#262054; --sel-border:#9A8FF2;
+  --overlay:rgba(5,4,14,.82); --shadow:0 1px 4px rgba(0,0,0,.4); color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text-1);font-family:var(--font);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--ring);outline-offset:2px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.2}
+p{margin:0}
+#app{height:100%;width:100%;overflow:hidden}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.scroll{height:100%;overflow-y:auto}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;border:1.5px solid transparent;padding:10px 20px;font-weight:700;font-size:14px;line-height:1.2;transition:background .18s,border-color .18s,transform .15s;white-space:nowrap}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--primary);color:var(--on-primary)}
+.btn-primary:not(:disabled):hover{background:var(--primary-hover)}
+.btn-green{background:var(--green);color:#10200A}
+.btn-green:not(:disabled):hover{background:var(--green-mid)}
+.btn-ghost{background:var(--surface);border-color:var(--border-strong);color:var(--text-1)}
+.btn-ghost:not(:disabled):hover{border-color:var(--text-2)}
+.btn-danger{background:var(--surface);border-color:var(--danger);color:var(--danger)}
+.btn-danger:not(:disabled):hover{background:var(--danger-bg)}
+.btn-lg{padding:14px 28px;font-size:15px}
+
+/* ---------- Start screen ---------- */
+.start-wrap{max-width:1120px;margin:0 auto;padding-block:40px 64px}
+.start-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.wordmark{font-weight:800;font-size:18px;letter-spacing:-.01em}
+.wordmark b{color:var(--green-mid)}
+.wordmark span{color:var(--text-3);font-weight:600;font-size:13px;margin-left:8px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--green-bg);border:1px solid color-mix(in srgb,var(--green) 45%,transparent);color:var(--green-dark);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 13px;border-radius:999px}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.start-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:start}
+.hero h1{font-size:clamp(28px,3.6vw,40px);font-weight:800;letter-spacing:-.025em;margin-top:14px}
+.hero .code{font-family:var(--mono);font-weight:700;color:var(--primary)}
+.hero .lede{color:var(--text-2);font-size:16px;max-width:60ch;margin-top:12px}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:28px}
+.fact{background:var(--surface);padding:16px}
+.fact dt{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-3)}
+.fact dd{margin:4px 0 0;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.fact dd small{font-size:13px;font-weight:600;color:var(--text-3)}
+.panel-title{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);margin:32px 0 12px}
+.domains{display:grid;gap:10px}
+.dom{display:grid;grid-template-columns:28px minmax(0,1fr) 44px;gap:12px;align-items:center}
+.dom .dn{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--text-3)}
+.dom .dname{font-weight:600;font-size:14px}
+.dom .dbar{height:6px;border-radius:3px;background:var(--border);margin-top:6px;overflow:hidden}
+.dom .dbar i{display:block;height:100%;background:var(--primary);border-radius:3px}
+.dom .dpct{font-family:var(--mono);font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.types{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--text-2)}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px}
+.card h2{font-size:20px;font-weight:800;letter-spacing:-.01em}
+.rules{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:12px}
+.rules li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;font-size:14px;color:var(--text-2)}
+.rules li strong{color:var(--text-1)}
+.rules .ri{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);font-size:12px;font-weight:700}
+.rules .ri.warn{background:var(--danger-bg);border-color:transparent;color:var(--danger)}
+.field{display:grid;gap:6px;margin-top:20px}
+.field label{font-size:13px;font-weight:700}
+.field input{padding:12px 14px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);font-size:15px}
+.field input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--ring)}
+.agree{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:14px;color:var(--text-2)}
+.agree input{width:18px;height:18px;margin-top:2px;accent-color:var(--primary);flex:none}
+.start-cta{margin-top:20px;display:grid;gap:10px}
+.form-err{color:var(--danger);font-size:13px;font-weight:600;min-height:1.2em}
+.notice{border-radius:12px;padding:12px 14px;font-size:13.5px;margin-top:20px}
+.notice.info{background:var(--flag-bg);color:var(--flag-text)}
+.notice.bad{background:var(--danger-bg);color:var(--danger);font-weight:600}
+@media (max-width:900px){.start-grid{grid-template-columns:minmax(0,1fr)}.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- Exam console ---------- */
+#screen-exam{height:100%;width:100%;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(0,1fr) auto;-webkit-user-select:none;user-select:none}
+#screen-exam > *{min-width:0}
+.bar{background:var(--bar);color:var(--on-bar)}
+.bar-inner{display:flex;align-items:center;gap:16px;padding-block:10px;flex-wrap:wrap}
+.bar .wordmark{font-size:15px}
+.bar .exam-name{font-size:13px;color:var(--on-bar-dim);min-width:0;flex:1 1 220px}
+.bar .exam-name strong{color:var(--on-bar);font-weight:700}
+.bar-right{display:flex;align-items:center;gap:14px;margin-left:auto;flex-wrap:wrap}
+.qcount{font-size:13px;color:var(--on-bar-dim);font-variant-numeric:tabular-nums}
+.qcount strong{color:var(--on-bar);font-size:15px}
+.timer{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px 12px;border-radius:10px}
+.timer .tl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--on-bar-dim)}
+.timer .tv{font-family:var(--mono);font-weight:700;font-size:18px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.timer.warn{background:rgba(240,113,103,.18);border-color:rgba(240,113,103,.6)}
+.timer.warn .tv{color:#FFC2BC}
+@media (prefers-reduced-motion:no-preference){.timer.critical .tv{animation:blink 1s steps(2,start) infinite}}
+@keyframes blink{to{opacity:.35}}
+.zoom{display:flex;border:1px solid rgba(255,255,255,.2);border-radius:8px;overflow:hidden}
+.zoom button{background:none;border:0;color:var(--on-bar);padding:5px 10px;font-weight:700;font-size:13px}
+.zoom button+button{border-left:1px solid rgba(255,255,255,.2)}
+.zoom button:hover{background:rgba(255,255,255,.1)}
+
+.strip{background:var(--surface);border-bottom:1px solid var(--border)}
+.strip-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-top:10px;font-size:13px;color:var(--text-2)}
+.stat{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.stat b{color:var(--text-1)}
+.dot{width:10px;height:10px;border-radius:3px;border:1.5px solid var(--border-strong);background:var(--surface)}
+.dot.ans{background:var(--green-bg);border-color:var(--green)}
+.dot.cur{background:var(--primary);border-color:var(--primary)}
+.dot.flag{background:var(--flag);border-color:var(--flag);border-radius:50%}
+.progress{flex:1 1 140px;max-width:260px;height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-left:auto}
+.progress i{display:block;height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+.qnav{display:flex;gap:6px;overflow-x:auto;padding-block:10px 12px;scrollbar-width:thin;max-width:100%}
+@media (min-width:900px){.qnav{flex-wrap:wrap;overflow-x:visible;gap:5px}.qnav .qn{width:36px;height:32px;font-size:12.5px}}
+.qn{flex:0 0 auto;width:38px;height:36px;border-radius:8px;border:1.5px solid var(--border-strong);background:var(--surface);font-family:var(--mono);font-weight:700;font-size:13px;color:var(--text-2);position:relative;font-variant-numeric:tabular-nums}
+.qn:hover{border-color:var(--text-2)}
+.qn.ans{background:var(--green-bg);border-color:var(--green);color:var(--green-dark)}
+.qn.cur{background:var(--primary);border-color:var(--primary);color:var(--on-primary);box-shadow:0 0 0 3px var(--ring)}
+.qn.flag::after{content:"";position:absolute;top:-4px;right:-4px;width:11px;height:11px;border-radius:50%;background:var(--flag);border:2px solid var(--surface)}
+
+.pane{overflow-y:auto;background:var(--bg)}
+.pane-inner{max-width:900px;margin:0 auto;padding-block:24px 40px}
+.q-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:24px}
+.q-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.q-num{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.q-num b{color:var(--text-1);font-family:var(--mono);font-size:14px;letter-spacing:0}
+.flag-btn{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--border-strong);background:var(--surface);color:var(--text-2);padding:7px 14px;border-radius:999px;font-weight:700;font-size:13px}
+.flag-btn svg{width:14px;height:14px}
+.flag-btn:hover{border-color:var(--flag);color:var(--flag-text)}
+.flag-btn.on{background:var(--flag-bg);border-color:var(--flag);color:var(--flag-text)}
+.scenario{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:calc(var(--qsize) - 1px);color:var(--text-2)}
+.scenario h3{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:6px}
+.stem{font-size:var(--qsize);display:grid;gap:12px;max-width:78ch}
+.instr{margin-top:14px;font-size:13px;font-weight:700;color:var(--primary)}
+:root:not([data-theme="light"]) .instr{color:var(--sel-border)}
+.opts{display:grid;gap:10px;margin-top:20px}
+.opt{display:flex;align-items:stretch;border:1.5px solid var(--border);border-radius:12px;background:var(--surface);transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--border-strong)}
+.opt.sel{border-color:var(--sel-border);background:var(--sel-bg)}
+.opt-main{flex:1;min-width:0;display:flex;gap:12px;align-items:flex-start;text-align:left;padding:14px 16px;background:none;border:0;font-size:var(--qsize);border-radius:12px}
+.mark{width:20px;height:20px;flex:none;margin-top:2px;border:2px solid var(--border-strong);border-radius:50%;display:grid;place-items:center;background:var(--surface)}
+.opts.multi .mark{border-radius:5px}
+.opt.sel .mark{border-color:var(--sel-border);background:var(--sel-border)}
+.opt.sel .mark::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--surface)}
+.opts.multi .opt.sel .mark::after{width:9px;height:5px;border-radius:0;background:none;border-left:2.5px solid var(--surface);border-bottom:2.5px solid var(--surface);transform:rotate(-45deg) translate(1px,-1px)}
+.letter{font-family:var(--mono);font-weight:700;color:var(--text-3);flex:none;min-width:1.4em}
+.otext{min-width:0}
+.opt.struck .otext{text-decoration:line-through;color:var(--text-3)}
+.opt.struck .letter{color:var(--border-strong)}
+.strike{flex:none;border:0;border-left:1px solid var(--border);background:none;color:var(--text-3);padding:0 14px;border-radius:0 12px 12px 0;display:grid;place-items:center}
+.strike:hover{color:var(--text-1);background:var(--surface-2)}
+.strike[aria-pressed="true"]{color:var(--danger)}
+.strike svg{width:16px;height:16px}
+.hint{margin-top:16px;font-size:12.5px;color:var(--text-3)}
+
+.order{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:10px}
+.order li{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;border:1.5px solid var(--border);border-radius:12px;padding:10px 10px 10px 14px;background:var(--surface);font-size:var(--qsize)}
+.order .pos{font-family:var(--mono);font-weight:700;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--sel-bg);color:var(--sel-border)}
+.order .moves{display:flex;gap:6px}
+.order .moves button{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border-strong);background:var(--surface);display:grid;place-items:center;color:var(--text-2)}
+.order .moves button:hover:not(:disabled){border-color:var(--primary);color:var(--primary)}
+.order .moves button:disabled{opacity:.3;cursor:not-allowed}
+.order .moves svg{width:14px;height:14px}
+
+.match{display:grid;gap:10px;margin-top:20px}
+.match-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:center;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface);font-size:var(--qsize)}
+.match-row.done{border-color:var(--sel-border);background:var(--sel-bg)}
+.match-row select{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);font-size:14px;font-weight:600}
+@media (max-width:640px){.match-row{grid-template-columns:minmax(0,1fr)}}
+
+.actions{background:var(--surface);border-top:1px solid var(--border)}
+.actions-inner{display:flex;align-items:center;gap:10px;padding-block:12px;flex-wrap:wrap}
+.actions .spacer{flex:1}
+.review-chip{font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;background:var(--flag-bg);color:var(--flag-text)}
+@media (max-width:640px){.actions .btn{padding:9px 14px;font-size:13px}.bar .exam-name{display:none}}
+
+/* Review screen */
+.rv-head h2{font-size:24px;font-weight:800;letter-spacing:-.015em}
+.rv-head p{color:var(--text-2);margin-top:6px}
+.rv-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}
+.rv-stat{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px}
+.rv-stat .n{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+.rv-stat .l{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-3)}
+.rv-stat.warn .n{color:var(--danger)} .rv-stat.flag .n{color:var(--flag)}
+.rv-filters{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.rv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:20px}
+.rv-tile{display:flex;align-items:center;gap:10px;text-align:left;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);padding:10px 12px;font-size:13px}
+.rv-tile:hover{border-color:var(--primary)}
+.rv-tile .tn{font-family:var(--mono);font-weight:700;min-width:2.4em;font-variant-numeric:tabular-nums}
+.rv-tile .ts{color:var(--text-2);flex:1}
+.rv-tile.inc .ts{color:var(--danger);font-weight:700}
+.rv-tile .tf{width:10px;height:10px;border-radius:50%;background:var(--flag);flex:none}
+@media (max-width:640px){.rv-stats{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Overlays ---------- */
+.overlay{position:fixed;inset:0;z-index:50;background:var(--overlay);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.dialog{background:var(--surface);border-radius:18px;max-width:480px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.35);display:grid;gap:12px}
+.dialog h2{font-size:20px;font-weight:800}
+.dialog p{color:var(--text-2)}
+.dialog .row{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px}
+.guard .dialog{border-top:6px solid var(--danger);text-align:center}
+.guard .count{font-family:var(--mono);font-size:56px;font-weight:700;color:var(--danger);line-height:1;font-variant-numeric:tabular-nums}
+.guard .row{justify-content:center}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--text-1);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:600;max-width:min(92vw,560px);text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+
+/* ---------- Results ---------- */
+.res-wrap{max-width:1000px;margin:0 auto;padding-block:36px 64px;display:grid;gap:24px}
+.res-banner{border-radius:14px;padding:14px 18px;font-weight:600;font-size:14px}
+.res-banner.bad{background:var(--danger-bg);color:var(--danger)}
+.res-banner.time{background:var(--flag-bg);color:var(--flag-text)}
+.score-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:28px;align-items:center}
+.verdict{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;display:inline-block;padding:5px 12px;border-radius:999px}
+.verdict.pass{background:var(--green-bg);color:var(--green-dark)}
+.verdict.fail{background:var(--danger-bg);color:var(--danger)}
+.big-score{font-size:clamp(48px,7vw,72px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1;margin-top:12px}
+.big-score small{font-size:18px;font-weight:600;color:var(--text-3);letter-spacing:0}
+.who{color:var(--text-2);margin-top:8px;font-size:14px}
+.scale{position:relative;padding-top:34px}
+.scale-track{height:12px;border-radius:6px;background:var(--border);position:relative;overflow:hidden}
+.scale-fill{position:absolute;inset:0 auto 0 0;border-radius:6px}
+.scale-pass{position:absolute;top:22px;bottom:-6px;width:2px;background:var(--text-1)}
+.scale-pass span{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;white-space:nowrap;color:var(--text-1)}
+.scale-ends{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--text-3);margin-top:8px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:20px}
+.tile{background:var(--surface-2);border-radius:12px;padding:12px 14px}
+.tile .n{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.tile .l{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.note{font-size:12.5px;color:var(--text-3);margin-top:14px}
+@media (max-width:760px){.score-card{grid-template-columns:minmax(0,1fr)}.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sec-title{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-bottom:14px}
+.dtable{width:100%;border-collapse:collapse;font-size:14px}
+.dtable th{text-align:left;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3);padding:0 10px 10px 0;border-bottom:1px solid var(--border)}
+.dtable td{padding:12px 10px 12px 0;border-bottom:1px solid var(--border);vertical-align:middle}
+.dtable tr:last-child td{border-bottom:0}
+.dtable .num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dbar2{height:8px;border-radius:4px;background:var(--border);overflow:hidden;min-width:80px}
+.dbar2 i{display:block;height:100%;border-radius:4px}
+.comp{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.comp.ok{background:var(--green-bg);color:var(--green-dark)}
+.comp.no{background:var(--danger-bg);color:var(--danger)}
+.table-scroll{overflow-x:auto}
+.rr-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.rr-filters button{border:1.5px solid var(--border-strong);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--text-2)}
+.rr-filters button[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.rr{border:1.5px solid var(--border);border-radius:14px;padding:18px;background:var(--surface);display:grid;gap:12px}
+.rr + .rr{margin-top:12px}
+.rr-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:var(--text-3);font-weight:600}
+.rr-top .qid{font-family:var(--mono);font-weight:700;color:var(--text-1);font-size:14px}
+.res-tag{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.res-tag.c{background:var(--green-bg);color:var(--green-dark)}
+.res-tag.w{background:var(--danger-bg);color:var(--danger)}
+.res-tag.u{background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
+.res-tag.f{background:var(--flag-bg);color:var(--flag-text)}
+.rr .stem{font-size:15px}
+.ro{display:grid;gap:6px}
+.ro div{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;padding:8px 10px;border-radius:8px;font-size:14px;border:1px solid transparent}
+.ro .ok{background:var(--green-bg);color:var(--green-dark);font-weight:600}
+.ro .bad{background:var(--danger-bg);color:var(--danger)}
+.ro .plain{color:var(--text-2)}
+.ro .ic{font-weight:800;text-align:center}
+.cmp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.cmp h4{margin:0 0 6px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.cmp ol{margin:0;padding-left:20px;font-size:14px;display:grid;gap:4px}
+@media (max-width:640px){.cmp{grid-template-columns:minmax(0,1fr)}}
+.expl{background:var(--surface-2);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text-2);display:grid;gap:8px}
+.expl strong{color:var(--text-1)}
+.expl a{color:var(--primary);word-break:break-all}
+:root:not([data-theme="light"]) .expl a{color:var(--sel-border)}
+.res-actions{display:flex;gap:10px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ================= START ================= -->
+  <section id="screen-start" class="scroll">
+    <div class="start-wrap gutter">
+      <div class="start-top">
+        <div class="wordmark">K21<b>Academy</b><span>Exam Simulator</span></div>
+        <span class="eyebrow"><i></i><span id="mockLabel">Mock Test 3</span></span>
+      </div>
+
+      <div class="start-grid">
+        <div class="hero">
+          <span class="code" id="examCode">MLA-C02</span>
+          <h1 id="examName">AWS Certified Machine Learning Engineer – Associate</h1>
+          <p class="lede">A full-length practice exam that runs the way the real test does: a fixed countdown, every question numbered across the top, flag for review, and a review screen before you submit. Leaving the exam window ends your attempt.</p>
+
+          <dl class="facts">
+            <div class="fact"><dt>Questions</dt><dd id="fQ">65</dd></div>
+            <div class="fact"><dt>Time limit</dt><dd id="fT">130 <small>min</small></dd></div>
+            <div class="fact"><dt>Passing score</dt><dd>720 <small>/ 1000</small></dd></div>
+            <div class="fact"><dt>Pace</dt><dd id="fP">2:00 <small>per Q</small></dd></div>
+          </dl>
+          <div id="sampleNote"></div>
+
+          <div class="panel-title">Content domains and weighting</div>
+          <div class="domains" id="domainList"></div>
+
+          <div class="panel-title">Question types</div>
+          <div class="types" id="typeList"></div>
+        </div>
+
+        <div class="card">
+          <h2>Before you begin</h2>
+          <ul class="rules">
+            <li><span class="ri">⏱</span><span><strong>The timer cannot be paused.</strong> When it reaches zero, your exam is submitted automatically.</span></li>
+            <li><span class="ri warn">!</span><span><strong>Stay on this page.</strong> Switching tabs, minimizing the browser or moving to another app ends your exam.</span></li>
+            <li><span class="ri warn">!</span><span><strong>The exam runs full screen.</strong> If you exit full screen, you have <span id="fsGrace">10</span> seconds to return before the exam ends.</span></li>
+            <li><span class="ri warn">!</span><span><strong>Do not refresh or close the page.</strong> Doing so ends the attempt.</span></li>
+            <li><span class="ri">⚑</span><span><strong>Flag for review</strong> marks questions to revisit. The review screen lists incomplete and flagged questions before you finish.</span></li>
+            <li><span class="ri">✓</span><span>Unanswered questions are scored as incorrect. There is no penalty for guessing.</span></li>
+          </ul>
+          <div id="prevAttempt"></div>
+          <div class="field">
+            <label for="candName">Candidate name</label>
+            <input id="candName" type="text" autocomplete="name" maxlength="60" placeholder="Enter your full name">
+          </div>
+          <label class="agree" for="agreeBox"><input id="agreeBox" type="checkbox"><span>I have read the rules above and I am ready to start. I understand that leaving this page will end my exam.</span></label>
+          <div class="start-cta">
+            <button class="btn btn-green btn-lg" id="startBtn" type="button">Start exam</button>
+            <div class="form-err" id="startErr" role="alert"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EXAM ================= -->
+  <section id="screen-exam" hidden>
+    <header class="bar">
+      <div class="bar-inner gutter">
+        <div class="wordmark">K21<b>Academy</b></div>
+        <div class="exam-name"><strong id="barCode">MLA-C02</strong> · <span id="barName"></span></div>
+        <div class="bar-right">
+          <div class="qcount" id="qCount" aria-live="polite"></div>
+          <div class="timer" id="timer" role="timer" aria-label="Time remaining"><span class="tl">Time left</span><span class="tv" id="timerVal">00:00:00</span></div>
+          <div class="zoom" aria-label="Text size"><button type="button" id="zoomOut" aria-label="Smaller text">A−</button><button type="button" id="zoomIn" aria-label="Larger text">A+</button></div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="strip" aria-label="Question navigator">
+      <div class="gutter">
+        <div class="strip-meta">
+          <span class="stat"><span class="dot cur"></span>Current</span>
+          <span class="stat"><span class="dot ans"></span>Answered <b id="sAns">0</b></span>
+          <span class="stat"><span class="dot"></span>Remaining <b id="sRem">0</b></span>
+          <span class="stat"><span class="dot flag"></span>Flagged <b id="sFlag">0</b></span>
+          <div class="progress" aria-hidden="true"><i id="progBar" style="width:0%"></i></div>
+        </div>
+        <div class="qnav" id="qnav"></div>
+      </div>
+    </nav>
+
+    <main class="pane" id="pane"><div class="pane-inner gutter" id="paneInner"></div></main>
+
+    <footer class="actions"><div class="actions-inner gutter" id="actions"></div></footer>
+  </section>
+
+  <!-- ================= RESULTS ================= -->
+  <section id="screen-results" class="scroll" hidden>
+    <div class="res-wrap gutter" id="results"></div>
+  </section>
+</div>
+
+<div class="overlay" id="modal" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle" id="modalBox"></div></div>
+<div class="overlay guard" id="guard" hidden><div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="guardTitle" id="guardBox"></div></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+
+/* =====================================================================
+   EXAM SETTINGS
+   ===================================================================== */
+var EXAM = {
+  code: 'MLA-C02',
+  name: 'AWS Certified Machine Learning Engineer – Associate',
+  mockTitle: 'Mock Test 3',
+  fullQuestions: 65,        // questions in this mock test
+  fullMinutes: 130,         // time limit for this mock test
+  passScaled: 720,
+  blurGraceSec: 3,          // seconds the window may lose focus before the exam ends
+  fullscreenGraceSec: 10,   // seconds to return to full screen
+  shuffleQuestions: true,
+  shuffleOptions: true
+};
+var DOMAINS = {
+  1: { name: 'Data Preparation for ML and AI', weight: 28 },
+  2: { name: 'ML Model and Foundation Model (FM) Development', weight: 24 },
+  3: { name: 'Deployment and Orchestration of ML and AI Workflows', weight: 24 },
+  4: { name: 'Operating, Monitoring, and Securing ML and AI Solutions', weight: 24 }
+};
+
+/* =====================================================================
+   QUESTION BANK
+   type: "single" | "multi" | "order" | "match"
+   single/multi: options[], answer[] (0-based indexes of correct options)
+   order: items[] listed in the CORRECT order (shown shuffled)
+   match: left[], right[], answer[] (index into right[] for each left item)
+   Optional: scenario (case-study text shown above the stem), refs[] (URLs)
+   ===================================================================== */
+var QUESTION_BANK = [
+
+/* ---------------- Domain 1: Data Preparation for ML and AI (18) ---------------- */
+{
+  id: 'M301', domain: 1, type: 'single',
+  stem: "A SaaS company streams usage events from 3,000 customer tenants through Amazon Data Firehose to Amazon S3. Each tenant's model is retrained separately, so the data scientists want the events stored under prefixes such as s3://usage/tenant_id=123/date=2026-10-15/. The company wants to avoid writing transformation code.\n\nWhich solution meets these requirements?",
+  options: [
+    "Turn on dynamic partitioning in Firehose and extract tenant_id from each JSON record with an inline parsing expression.",
+    "Deliver all events to one S3 prefix and run a nightly AWS Glue job that rewrites them into a folder for each tenant ID.",
+    "Create 3,000 Firehose streams, one for each tenant, and have every producer choose the correct stream for each event.",
+    "Turn on S3 Event Notifications for the bucket and have an AWS Lambda function move each new object to the tenant's prefix."
+  ],
+  answer: [0],
+  explanation: "Firehose dynamic partitioning groups records by keys taken from the data itself, using inline JSON parsing for keys such as tenant_id, and writes each group to its own S3 prefix without custom code.\n\nA nightly Glue rewrite and a Lambda function that moves objects both add code and delay. Thousands of separate streams push routing logic into every producer and are hard to manage.",
+  refs: []
+},
+{
+  id: 'M302', domain: 1, type: 'single',
+  stem: "A data engineering team receives new CSV and JSON datasets in Amazon S3 every week from different partners. Before the data can be queried in Amazon Athena or used in AWS Glue ETL jobs for feature engineering, each dataset needs a table definition with its columns and data types. The schemas sometimes change.\n\nWhich solution requires the LEAST manual effort?",
+  options: [
+    "Schedule an AWS Glue crawler that scans the partner prefixes and creates or updates tables in the AWS Glue Data Catalog.",
+    "Write CREATE TABLE statements in Athena by hand for each new dataset and update them whenever a partner changes its format.",
+    "Load every dataset into Amazon RDS first so that the database engine records the column definitions for each partner.",
+    "Ask each partner to email a schema document and store the documents in a shared folder that the data scientists check."
+  ],
+  answer: [0],
+  explanation: "AWS Glue crawlers infer schemas from data in S3 and create or update table definitions in the Glue Data Catalog on a schedule, so Athena and Glue jobs can use new and changed datasets without manual DDL.\n\nHand-written CREATE TABLE statements and emailed schema documents require ongoing manual work. Loading everything into RDS adds a database the team does not need.",
+  refs: []
+},
+{
+  id: 'M303', domain: 1, type: 'single',
+  stem: "An AWS Glue ETL job builds a training dataset from log files in Amazon S3. Each night, about 2,000 new files arrive, but the job reprocesses all 900,000 historical files every time, and its run time and cost keep growing.\n\nWhat should the ML engineer do so that each run processes only the new files?",
+  options: [
+    "Turn on job bookmarks for the Glue job so that it tracks data it has already processed.",
+    "Increase the number of Glue workers so that all of the historical files are processed faster.",
+    "Delete the historical log files from Amazon S3 after each run so that only new files remain.",
+    "Convert the Glue job to a Python shell job and process the files on a single worker instead."
+  ],
+  answer: [0],
+  explanation: "Glue job bookmarks store state about what a job has already processed, so the next run reads only new data. This keeps run time proportional to the daily increment.\n\nMore workers make the full reprocess faster but not cheaper. Deleting history removes data that may be needed later. A Python shell job on one worker would still reprocess everything, more slowly.",
+  refs: []
+},
+{
+  id: 'M304', domain: 1, type: 'single',
+  stem: "A team stores raw sensor events for future model training. Producers write one record at a time at a high rate, and the event schema changes every few months as new fields are added. Downstream jobs must keep reading old and new records without breaking.\n\nWhich storage format is the BEST fit for writing these raw records?",
+  options: [
+    "Apache Avro, a row-based format that stores the schema with each file and supports schema evolution",
+    "Uncompressed CSV with a header row that is updated by hand whenever the schema changes",
+    "Plain text files with one record per line and fields separated by pipe characters",
+    "Microsoft Excel workbooks, with one new worksheet created for each new version of the event schema"
+  ],
+  answer: [0],
+  explanation: "Avro is a compact row-based format suited to record-at-a-time writes. Each file carries its schema, and Avro's schema evolution rules let readers handle added fields with default values, so old and new records stay readable.\n\nCSV and pipe-delimited text have no embedded schema or evolution rules, so new fields break parsers. Excel workbooks are not designed for streaming writes or large-scale processing.",
+  refs: []
+},
+{
+  id: 'M305', domain: 1, type: 'single',
+  stem: "A gaming company keeps 600 GB of player profile data in an Amazon DynamoDB table that serves live game traffic. The ML team needs a full copy of the table in Amazon S3 each week to train a churn model, without consuming the table's read capacity or affecting the game.\n\nWhich solution meets these requirements?",
+  options: [
+    "Turn on point-in-time recovery and use the DynamoDB export to Amazon S3 feature on a weekly schedule.",
+    "Run a weekly Scan operation from an AWS Lambda function and write each page of results to Amazon S3.",
+    "Create a global secondary index that projects all attributes and read the index into Amazon S3 each week.",
+    "Increase the table's provisioned read capacity during the weekly copy and read every item with a Scan."
+  ],
+  answer: [0],
+  explanation: "DynamoDB export to S3 uses point-in-time recovery data to write a full copy of the table to S3 without consuming read capacity units, so live traffic is not affected.\n\nScans from Lambda or with extra capacity consume read capacity and can throttle the game. A global secondary index adds write cost and still has to be read with capacity.",
+  refs: []
+},
+{
+  id: 'M306', domain: 1, type: 'single',
+  stem: "A retailer's sales history lives in Amazon Redshift. The ML team needs the result of a large aggregation query, about 400 million rows, as a training dataset in Amazon S3 in a columnar format each month.\n\nWhich approach is the MOST efficient?",
+  options: [
+    "Run the Redshift UNLOAD command with the query and write the results to Amazon S3 in Apache Parquet format.",
+    "Run the query from a Jupyter notebook, load the results into pandas and save them to Amazon S3 as one CSV file.",
+    "Export the query results through the Redshift query editor as a CSV download and upload the file to Amazon S3 manually.",
+    "Use AWS DataSync to copy the Redshift cluster's storage volumes directly into an Amazon S3 bucket every month."
+  ],
+  answer: [0],
+  explanation: "UNLOAD runs the query inside Redshift and writes the results in parallel from the compute nodes directly to S3, with Parquet available as an output format.\n\nLoading 400 million rows into pandas on one notebook is slow and may run out of memory. Manual downloads do not scale. DataSync copies file and object storage, not Redshift tables.",
+  refs: []
+},
+{
+  id: 'M307', domain: 1, type: 'single',
+  stem: "A voice analytics team is preparing 80,000 audio clips from different call center systems to fine-tune a speech classification model. The clips arrive as MP3, WAV and AAC files with sample rates from 8 kHz to 48 kHz, in both mono and stereo. Training results are unstable across batches.\n\nWhich data preparation step should the team take FIRST?",
+  options: [
+    "Convert every clip to one format, one sample rate (for example 16 kHz) and mono before extracting features.",
+    "Keep each clip in its original format and sample rate so that no audio information is ever lost in conversion.",
+    "Remove every clip that is not already a WAV file, even though this discards about two thirds of the data.",
+    "Transcribe every clip to text and train the model on the transcripts instead of the audio signals themselves."
+  ],
+  answer: [0],
+  explanation: "Models expect consistent inputs. Resampling all clips to one sample rate, downmixing to mono and decoding to one format makes the extracted features comparable across clips and stabilizes training.\n\nKeeping mixed formats and rates leaves the inconsistency in place. Dropping two thirds of the data wastes most of the dataset. Transcripts lose acoustic information that a speech classification model may need, such as tone.",
+  refs: []
+},
+{
+  id: 'M308', domain: 1, type: 'single',
+  stem: "A data scientist is using a linear model to predict insurance claims. Analysis shows that claim rates are high for young drivers, low for middle-aged drivers and high again for older drivers. The single numeric driver_age feature cannot capture this U-shaped pattern in a linear model.\n\nWhich feature engineering technique should the data scientist apply?",
+  options: [
+    "Bin driver_age into ranges, such as quantile-based age bands, and one-hot encode the resulting bins.",
+    "Apply min-max scaling to driver_age so that all of its values fall between 0 and 1 before training.",
+    "Remove driver_age from the dataset because its relationship with the target is not linear.",
+    "Replace driver_age with the average age of all drivers in the dataset for every single row."
+  ],
+  answer: [0],
+  explanation: "Binning turns a numeric feature into ranges, and one-hot encoding the bins lets a linear model learn a separate weight for each age band, which captures the U-shaped relationship.\n\nMin-max scaling is a linear change and does not alter the shape of the relationship. Removing the feature throws away a strong signal. Replacing every value with the average removes all information.",
+  refs: []
+},
+{
+  id: 'M309', domain: 1, type: 'single',
+  stem: "A delivery company's tabular model uses a destination_postcode feature with 40,000 distinct values. One-hot encoding the column creates a very wide, sparse dataset that slows training and uses too much memory, but the postcode clearly affects delivery time.\n\nWhich encoding approach should the ML engineer use?",
+  options: [
+    "Use feature hashing to map the postcodes into a fixed number of buckets, such as 1,024.",
+    "Label-encode the postcodes as integers from 1 to 40,000 and use them as one numeric feature.",
+    "Drop the destination_postcode column, because high-cardinality features cannot be used at all.",
+    "Keep one-hot encoding and increase the instance memory until the training job completes."
+  ],
+  answer: [0],
+  explanation: "Feature hashing maps many category values into a fixed number of columns, which keeps the dataset compact while preserving most of the signal. Other options with similar goals include target encoding or learned embeddings.\n\nLabel encoding implies that postcode 40,000 is greater than postcode 1, which is meaningless. Dropping the column loses a useful signal. More memory hides the problem and keeps training slow.",
+  refs: []
+},
+{
+  id: 'M310', domain: 1, type: 'single',
+  stem: "An ML engineer is fine-tuning a pretrained BERT-based model on SageMaker AI to classify support tickets. Accuracy is much lower than expected. The engineer finds that the training script splits text on spaces and maps words to IDs with a vocabulary built from the tickets.\n\nWhat should the engineer change?",
+  options: [
+    "Tokenize the tickets with the same tokenizer and vocabulary that were used to pretrain the model.",
+    "Build an even larger custom vocabulary from the tickets so that more of the words get their own IDs.",
+    "Remove all punctuation and numbers from the tickets and keep using the custom space-based vocabulary.",
+    "Lowercase all of the ticket text and train the model for twice as many epochs with the same tokenizer."
+  ],
+  answer: [0],
+  explanation: "A pretrained model's embeddings are tied to its own tokenizer and vocabulary. Feeding IDs from a different vocabulary means the model sees the wrong tokens, so fine-tuning must use the original tokenizer.\n\nA larger or cleaner custom vocabulary still does not match the model's embeddings. More epochs cannot fix inputs that the model does not understand.",
+  refs: []
+},
+{
+  id: 'M311', domain: 1, type: 'single',
+  stem: "A legal publisher is building an Amazon Bedrock knowledge base from long court opinions written as continuous narrative text. With fixed-size chunking and 0% overlap, many retrieved chunks start or end in the middle of an argument, so key sentences are split between two chunks.\n\nWhich change will MOST directly address this problem?",
+  options: [
+    "Keep fixed-size chunking but set an overlap percentage, such as 15 to 20%, between adjacent chunks.",
+    "Reduce the chunk size to 50 tokens with 0% overlap so that each chunk contains only one sentence or less.",
+    "Remove all paragraph breaks from the court opinions before ingestion so that the text is fully continuous.",
+    "Increase the number of retrieved results from 5 to 25 without making any change to the chunking settings."
+  ],
+  answer: [0],
+  explanation: "Overlap repeats the end of one chunk at the start of the next, so a sentence or argument that crosses a boundary appears whole in at least one chunk.\n\nSmaller chunks with no overlap split text even more often. Removing paragraph breaks makes boundaries worse. Retrieving more results adds noise but does not rejoin split sentences.",
+  refs: ['https://docs.aws.amazon.com/bedrock/latest/userguide/kb-chunking.html']
+},
+{
+  id: 'M312', domain: 1, type: 'single',
+  stem: "A team created an Amazon Bedrock knowledge base with one embedding model and ingested 200,000 documents. To improve multilingual results, a developer changed the application so that user queries are embedded with a different, newer embedding model before calling the vector store directly. Retrieval quality dropped sharply.\n\nWhat is the cause, and what should the team do?",
+  options: [
+    "Queries and documents must use the same embedding model, so the team should create a new knowledge base with that model and re-ingest.",
+    "The new embedding model is too large, so the team should lower the vector store's similarity threshold for every query that users send.",
+    "The vector store's index is out of date, so the team should sync the existing data source again with no other changes.",
+    "The documents are too long, so the team should switch to semantic chunking and keep using the new model for queries only."
+  ],
+  answer: [0],
+  explanation: "Vectors from different embedding models live in different vector spaces, so comparing a query vector from one model with document vectors from another gives meaningless similarity scores. Switching models requires re-embedding the documents, which in Bedrock Knowledge Bases means creating a knowledge base with the new embedding model and ingesting the data again.\n\nChanging thresholds, re-syncing with the old model or changing chunking does not fix the mismatch between the two vector spaces.",
+  refs: []
+},
+{
+  id: 'M313', domain: 1, type: 'single',
+  stem: "A biotech company wants to run continued pre-training on a model in Amazon Bedrock with 30,000 internal research articles stored as text. The ML engineer must prepare the training file in the format that continued pre-training expects.\n\nHow should the engineer format the data?",
+  options: [
+    "As JSON Lines, with each line containing an object with an input field that holds a passage of unlabeled text.",
+    "As JSON Lines, with each line containing a prompt field and a completion field written by subject matter experts.",
+    "As a CSV file with one column for the article title and one column for a sentiment label for each article.",
+    "As Apache Parquet files with one row per sentence and a column that marks the sentence's position in the article."
+  ],
+  answer: [0],
+  explanation: "Continued pre-training in Amazon Bedrock uses unlabeled data in JSON Lines format, where each record has an input field containing text. The model learns from the raw domain text itself.\n\nPrompt and completion pairs are the format for supervised fine-tuning, which needs labeled examples. Titles with sentiment labels and Parquet sentence tables are not supported formats for this job.",
+  refs: ['https://docs.aws.amazon.com/bedrock/latest/userguide/custom-models.html']
+},
+{
+  id: 'M314', domain: 1, type: 'single',
+  stem: "A data engineering team wants to start validating a new 300-column training dataset in AWS Glue, but nobody knows which data quality rules are appropriate for each column. The team wants AWS to suggest an initial set of rules from the data itself, which they can then review and adjust.\n\nWhich solution meets these requirements?",
+  options: [
+    "Use AWS Glue Data Quality rule recommendations, which analyze the data and generate a starting ruleset in DQDL.",
+    "Use Amazon SageMaker Clarify to generate a pre-training bias report and convert its metrics into data quality rules.",
+    "Use AWS Config managed rules to scan the dataset and create a data quality rule for each column automatically.",
+    "Use Amazon Macie to classify the columns and treat every sensitive data finding as a data quality rule to enforce."
+  ],
+  answer: [0],
+  explanation: "AWS Glue Data Quality can profile a dataset and recommend rules, such as completeness, uniqueness and value ranges, written in DQDL. The team can review, edit and then evaluate the ruleset in jobs.\n\nClarify reports bias, not general data quality. AWS Config evaluates resource configurations, not data contents. Macie finds sensitive data, which is a privacy concern rather than a data quality ruleset.",
+  refs: []
+},
+{
+  id: 'M315', domain: 1, type: 'single',
+  stem: "A medical imaging company uses Amazon SageMaker Ground Truth to label chest X-rays as normal or abnormal. Reviews show that individual labelers disagree on about 12% of images, and the resulting labels are noisy.\n\nWhich Ground Truth configuration will MOST improve label quality?",
+  options: [
+    "Send each image to several workers and use annotation consolidation to combine their answers into one label.",
+    "Send each image to exactly one worker and shorten the task time limit so that workers decide more quickly.",
+    "Turn off the labeling instructions and examples so that workers rely only on their own clinical judgment.",
+    "Use automated data labeling only, with no human workers, so that every image gets a consistent label."
+  ],
+  answer: [0],
+  explanation: "Ground Truth can route each item to multiple workers and consolidate their responses, for example by weighted voting, which reduces the effect of any single worker's error.\n\nOne worker with less time increases noise. Removing instructions and examples makes labels less consistent. Automated labeling depends on human labels to learn from and only labels items it is confident about.",
+  refs: []
+},
+{
+  id: 'M316', domain: 1, type: 'single',
+  stem: "A data scientist is training a binary XGBoost model in Amazon SageMaker AI to detect defective parts. Only 1% of the training rows are defective. The data scientist wants the algorithm to give more weight to the defective class during training without changing the dataset.\n\nWhich hyperparameter should the data scientist set?",
+  options: [
+    "scale_pos_weight, set to roughly the number of negative rows divided by the number of positive rows",
+    "max_depth, set to a much larger value so that each tree can grow deeper and capture more patterns",
+    "eta, set to a much higher value so that each new tree has a stronger effect on the final predictions",
+    "num_round, set to several times the current value so that the model trains for many more boosting rounds"
+  ],
+  answer: [0],
+  explanation: "scale_pos_weight multiplies the weight of positive examples in the loss. A common starting value is the ratio of negative to positive examples (about 99 here), which balances the classes without resampling.\n\nDeeper trees, a higher learning rate or more rounds change model capacity and speed, not class balance, and can increase overfitting.",
+  refs: []
+},
+{
+  id: 'M317', domain: 1, type: 'multi',
+  stem: "An ML engineer is preparing 20,000 prompt and response pairs to fine-tune a model in Amazon Bedrock and will report its performance to stakeholders. A first review shows that about 900 pairs are exact duplicates.\n\nWhich steps should the engineer take before starting the fine-tuning job? (Select TWO.)",
+  options: [
+    "Remove the duplicate prompt and response pairs.",
+    "Hold out a separate validation set that does not overlap with the training data.",
+    "Copy the stakeholder test prompts into the training data so that the reported scores are higher.",
+    "Remove every pair whose response is shorter than 50 words, whatever the prompt asks for.",
+    "Shuffle the responses between prompts so that the model sees more variety during training."
+  ],
+  answer: [0, 1],
+  explanation: "Duplicates overweight some examples and can encourage memorization, so they should be removed. A separate validation set that the model never trains on gives an honest measure of performance and helps detect overfitting.\n\nTraining on the test prompts leaks evaluation data and inflates scores. Dropping all short responses removes correct answers to short questions. Shuffling responses between prompts creates wrong labels.",
+  refs: []
+},
+{
+  id: 'M318', domain: 1, type: 'single',
+  stem: "A company's fraud dataset in Amazon S3 is labeled from investigations that were closed in the past. New research shows that the fraud label is missing for about 3% of rows because those cases were never investigated, and the team is about to train a supervised classifier.\n\nHow should the team handle the rows with missing labels?",
+  options: [
+    "Exclude the unlabeled rows from supervised training, or label them through review, instead of guessing.",
+    "Label all of the uninvestigated rows as not fraud, because most transactions in the dataset are legitimate.",
+    "Label all of the uninvestigated rows as fraud, so that the model learns to be as cautious as possible.",
+    "Fill the missing labels with the mean value of the label column so that every row has a numeric target."
+  ],
+  answer: [0],
+  explanation: "A supervised model learns from its labels. Guessing labels adds systematic noise, so rows without a trustworthy label should be left out of training or labeled properly, for example through a human review workflow.\n\nMarking them all as not fraud or all as fraud injects biased labels. A mean value such as 0.03 is not a valid class label.",
+  refs: []
+},
+
+/* ---------------- Domain 2: ML Model and FM Development (16) ---------------- */
+{
+  id: 'M319', domain: 2, type: 'single',
+  stem: "A legal research company has a large corpus of court documents and wants vector representations of legal terms, so that words such as \"tort\" and \"negligence\" end up close together. The team wants a SageMaker AI built-in algorithm that learns word embeddings from the raw text in an unsupervised way.\n\nWhich algorithm should the team use?",
+  options: [
+    "BlazingText in Word2Vec mode",
+    "Linear Learner in binary classification mode",
+    "K-Nearest Neighbors (k-NN) in regression mode",
+    "XGBoost with the multi:softmax objective function"
+  ],
+  answer: [0],
+  explanation: "BlazingText provides an optimized Word2Vec implementation that learns dense word vectors from unlabeled text, placing words used in similar contexts close together.\n\nLinear Learner and XGBoost are supervised models that need labels. k-NN finds nearest neighbors for existing vectors; it does not learn word embeddings from text.",
+  refs: []
+},
+{
+  id: 'M320', domain: 2, type: 'single',
+  stem: "A data scientist must build a multi-class model on tabular insurance data that has many missing values scattered across 60 numeric features. The team wants strong accuracy on tabular data without writing a separate imputation step for every feature.\n\nWhich SageMaker AI built-in algorithm is the BEST fit?",
+  options: [
+    "XGBoost, which handles missing values natively by learning a default direction at each split",
+    "K-means, which groups the rows into clusters that can then be treated as the predicted classes",
+    "Principal Component Analysis (PCA), which reduces the 60 features to a smaller set of components",
+    "Random Cut Forest, which assigns anomaly scores that can be converted into class predictions"
+  ],
+  answer: [0],
+  explanation: "XGBoost is a strong choice for tabular classification and handles missing values natively: during training it learns which branch missing values should follow at each split.\n\nK-means and PCA are unsupervised and do not predict labels. Random Cut Forest scores anomalies and is not a multi-class classifier.",
+  refs: []
+},
+{
+  id: 'M321', domain: 2, type: 'single',
+  stem: "A supply chain team of business analysts wants to forecast weekly demand for 2,000 products from historical sales data in Amazon S3. The analysts do not write code, and they want to generate forecasts and review accuracy metrics through a visual interface.\n\nWhich solution meets these requirements?",
+  options: [
+    "Use Amazon SageMaker Canvas to build a time series forecasting model and generate the predictions.",
+    "Use a SageMaker AI notebook instance to train a custom LSTM network with the PyTorch framework.",
+    "Use Amazon QuickSight to build a bar chart of past sales and extend the bars by hand for the coming weeks.",
+    "Use the SageMaker AI DeepAR algorithm through the Python SDK and write a custom evaluation script."
+  ],
+  answer: [0],
+  explanation: "SageMaker Canvas is a no-code interface that supports time series forecasting. Analysts can import data, build a forecasting model, view accuracy metrics and generate predictions without writing code.\n\nA custom LSTM and DeepAR through the SDK both require coding. Extending a chart by hand is not a forecasting model.",
+  refs: []
+},
+{
+  id: 'M322', domain: 2, type: 'single',
+  stem: "A product team needs a baseline model for a tabular classification problem within a day. The team wants AWS to try several algorithms and hyperparameter settings automatically, rank the candidate models on a leaderboard, and show which features drive the best model.\n\nWhich solution meets these requirements?",
+  options: [
+    "Use SageMaker AI AutoML (Autopilot) through Canvas or the AutoML API to build and rank candidate models.",
+    "Train a single Linear Learner model with default settings and treat it as the only candidate to evaluate.",
+    "Run SageMaker Clarify on the raw dataset and use its bias report as a ranking of the candidate algorithms.",
+    "Use SageMaker Ground Truth to label more data, then train an XGBoost model with its default hyperparameters."
+  ],
+  answer: [0],
+  explanation: "SageMaker AutoML (Autopilot) explores data preprocessing, algorithms and hyperparameters automatically, produces a leaderboard of candidates and includes explainability reports for the best model.\n\nOne default model gives no comparison. Clarify bias reports do not rank algorithms. Labeling more data does not address the request for automatic model search.",
+  refs: []
+},
+{
+  id: 'M323', domain: 2, type: 'single',
+  stem: "An insurance company wants an assistant that reads photos of damaged cars uploaded by customers, together with the customer's written description, and drafts a first damage summary. The team is choosing a foundation model in Amazon Bedrock.\n\nWhich model capability is REQUIRED for this use case?",
+  options: [
+    "Multimodal input, so that the model can accept both images and text in the same request",
+    "An embedding-only output, so that the model returns vectors instead of generated text",
+    "Image generation, so that the model can create new pictures of what the car looked like before",
+    "A speech-to-text interface, so that the model can transcribe the customer's description from audio"
+  ],
+  answer: [0],
+  explanation: "The assistant must understand photos and text together and then write text, so it needs a model that accepts multimodal (image and text) input and generates text output.\n\nEmbedding models return vectors, not summaries. Image generation creates pictures rather than reading them. The description is already written text, so speech-to-text is not required.",
+  refs: []
+},
+{
+  id: 'M324', domain: 2, type: 'single',
+  stem: "A consulting firm must summarize 400-page due diligence reports with a foundation model in Amazon Bedrock. Each report is about 250,000 tokens, which is larger than the context window of the chosen model.\n\nWhich approach will produce a complete summary of each report?",
+  options: [
+    "Split each report into sections, summarize each section, then summarize the section summaries.",
+    "Send only the first part of each report that fits into the context window and summarize that part alone.",
+    "Set the maximum output tokens to 250,000 so that the model can read the entire report in one request.",
+    "Remove all spaces and punctuation from the reports so that the full text fits within the context window."
+  ],
+  answer: [0],
+  explanation: "When a document exceeds the context window, a map-reduce approach summarizes chunks separately and then combines those summaries, so every section contributes to the final result. Choosing a model with a large enough context window is the other option.\n\nTruncating ignores most of the report. Maximum output tokens limit the response length, not the input size. Removing spaces and punctuation does not reliably reduce tokens and damages the text.",
+  refs: []
+},
+{
+  id: 'M325', domain: 2, type: 'multi',
+  stem: "An application asks a foundation model in Amazon Bedrock to answer inside <answer></answer> tags. The model often keeps writing after the closing tag, adding unrelated text, and some responses are much longer than needed, which raises cost.\n\nWhich inference settings should the ML engineer use to control where and how long the output runs? (Select TWO.)",
+  options: [
+    "Add </answer> as a stop sequence.",
+    "Set a maximum tokens limit suited to the expected answer length.",
+    "Increase the temperature to 1.0.",
+    "Set top P to 1.0 so that more tokens are considered.",
+    "Remove the instruction to use the answer tags."
+  ],
+  answer: [0, 1],
+  explanation: "A stop sequence ends generation as soon as the model produces the given text, so output stops at the closing tag. A maximum tokens limit caps the length of each response, controlling cost.\n\nHigher temperature and top P increase randomness and do not stop extra text. Removing the tag instruction removes the structure the application relies on.",
+  refs: []
+},
+{
+  id: 'M326', domain: 2, type: 'single',
+  stem: "An education company uses a foundation model in Amazon Bedrock to solve multi-step math word problems for students. The model often jumps straight to a final number and gets about a third of the problems wrong. The team wants to improve accuracy without fine-tuning.\n\nWhich prompting technique should the team try?",
+  options: [
+    "Chain-of-thought prompting that asks the model to work through the problem step by step before answering.",
+    "Zero-shot prompting with an instruction to answer with only the final number and no explanation or working at all.",
+    "Raising the temperature so that the model explores more possible answers for each problem it receives.",
+    "Shortening the prompt by removing the problem's units and context so that the model has less to read."
+  ],
+  answer: [0],
+  explanation: "Chain-of-thought prompting asks the model to reason through intermediate steps, which often improves accuracy on multi-step arithmetic and logic problems.\n\nForcing a bare number removes the reasoning that helps. Higher temperature adds randomness. Removing units and context takes away information the model needs.",
+  refs: []
+},
+{
+  id: 'M327', domain: 2, type: 'single',
+  stem: "An ML engineer runs a supervised fine-tuning job in Amazon Bedrock for 5 epochs with a validation dataset. The job metrics show that training loss keeps decreasing, but validation loss is lowest after epoch 2 and rises in epochs 3 to 5.\n\nWhat should the engineer change for the next fine-tuning job?",
+  options: [
+    "Reduce the epoch count to about 2 so that training stops before the model overfits the training data.",
+    "Increase the epoch count to 10 so that the validation loss has more time to come back down again.",
+    "Remove the validation dataset so that the job metrics show only the decreasing training loss values.",
+    "Double the learning rate so that the model reaches the lowest validation loss within the first epoch."
+  ],
+  answer: [0],
+  explanation: "Validation loss rising while training loss falls shows overfitting after epoch 2. Fewer epochs stop training near the point where the model generalizes best.\n\nMore epochs make overfitting worse. Removing validation data hides the problem. A much higher learning rate can make training unstable and does not address overfitting.",
+  refs: []
+},
+{
+  id: 'M328', domain: 2, type: 'single',
+  stem: "Users of a RAG assistant built on Amazon Bedrock Knowledge Bases often ask compound questions, such as \"Compare the parental leave policy in Germany with the one in Canada.\" A single retrieval for the whole question often returns chunks about only one of the two countries.\n\nWhich knowledge base feature will MOST improve retrieval for these questions?",
+  options: [
+    "Query decomposition, which breaks a complex question into sub-queries and retrieves chunks for each one.",
+    "A smaller chunk size, so that each chunk is more likely to mention both countries in the same passage of text.",
+    "A higher temperature for the generation model, so that the answer covers more countries in the response.",
+    "A guardrail with a denied topic for comparisons, so that the assistant asks users to send one question at a time."
+  ],
+  answer: [0],
+  explanation: "Query decomposition breaks a complex question into simpler sub-queries, retrieves relevant chunks for each (Germany and Canada separately), and passes all results to the model for the final answer.\n\nSmaller chunks do not make one passage cover both countries. Temperature affects generation, not retrieval. Blocking comparisons is a poor experience and does not improve retrieval.",
+  refs: []
+},
+{
+  id: 'M329', domain: 2, type: 'single',
+  stem: "A bank evaluates a model that flags money-laundering transactions, which make up 0.2% of the data. The ROC AUC is 0.97, but investigators say most flagged transactions are false alarms. The team needs a summary metric that better reflects performance on the rare positive class.\n\nWhich metric should the team focus on?",
+  options: [
+    "Area under the precision-recall curve (PR AUC)",
+    "Overall accuracy across all of the transactions",
+    "Area under the ROC curve (ROC AUC), recalculated weekly",
+    "Mean squared error (MSE) of the predicted probabilities"
+  ],
+  answer: [0],
+  explanation: "With extreme class imbalance, ROC AUC can look high because the large number of true negatives keeps the false positive rate low. The precision-recall curve focuses on the positive class, so PR AUC shows how many flags are real across thresholds.\n\nAccuracy is dominated by the 99.8% negative class. Recalculating ROC AUC does not change its weakness here. MSE of probabilities is not the standard metric for this question.",
+  refs: []
+},
+{
+  id: 'M330', domain: 2, type: 'single',
+  stem: "A support team trains a model to route tickets into 12 categories. Three categories are rare but business-critical. The team needs one summary metric that treats every category equally, so that poor performance on a rare category is clearly visible.\n\nWhich metric should the team use?",
+  options: [
+    "Macro-averaged F1 score",
+    "Weighted-average F1 score",
+    "Overall accuracy",
+    "Micro-averaged precision"
+  ],
+  answer: [0],
+  explanation: "Macro-averaged F1 computes F1 for each class and takes the plain average, so every class counts equally and weak results on rare classes pull the score down.\n\nWeighted F1 weights classes by their frequency, so common classes dominate. Overall accuracy and micro-averaged precision are also dominated by frequent classes.",
+  refs: []
+},
+{
+  id: 'M331', domain: 2, type: 'single',
+  stem: "An ML engineer trains a 300-million-parameter vision model that fits comfortably in one GPU's memory. Training on a single ml.p4d.24xlarge GPU takes 6 days because the dataset has 80 million images, and the team needs results within 1 day.\n\nWhich approach will reduce training time the MOST?",
+  options: [
+    "Use distributed data parallel training across multiple GPUs and instances with SageMaker's data parallelism library.",
+    "Use tensor parallelism to split each layer of the model across eight GPUs while keeping a single stream of training data.",
+    "Reduce the batch size to 1 so that each training step finishes faster on the single GPU used today.",
+    "Move the training job to a larger CPU instance with more vCPUs and much more system memory."
+  ],
+  answer: [0],
+  explanation: "When the model fits on one GPU but there is a lot of data, data parallelism copies the model to many GPUs and splits each batch across them, which shortens training roughly in proportion to the number of GPUs. SageMaker's data parallelism library optimizes the communication between them.\n\nTensor parallelism is for models that do not fit in memory and adds communication overhead here. A batch size of 1 makes training slower overall. CPUs are much slower than GPUs for this workload.",
+  refs: []
+},
+{
+  id: 'M332', domain: 2, type: 'single',
+  stem: "An ML engineer launches a SageMaker AI automatic model tuning job for a custom training script in a framework container. The objective is validation:f1, but the tuning job reports that it cannot find the objective metric for any training job, even though the script prints the value to its logs.\n\nWhat should the engineer do?",
+  options: [
+    "Define a metric definition with a regular expression that matches the printed F1 value in the training logs.",
+    "Change the objective metric to the training loss value, which SageMaker AI captures automatically for all scripts.",
+    "Increase the maximum number of training jobs so that the tuning job has more chances to find the metric.",
+    "Switch the tuning strategy from Bayesian optimization to grid search so that every job reports its metric."
+  ],
+  answer: [0],
+  explanation: "For custom scripts, SageMaker AI extracts metrics from the training logs using metric definitions: a name and a regular expression. The tuning job can use the metric as its objective only after a matching definition is provided.\n\nSageMaker does not capture arbitrary metrics automatically from custom scripts. More jobs or a different search strategy do not help when no metric is being parsed.",
+  refs: []
+},
+{
+  id: 'M333', domain: 2, type: 'single',
+  stem: "A team is training a very deep feedforward network with sigmoid activations on SageMaker AI. SageMaker Debugger reports that gradients in the early layers are close to zero, and training loss barely changes after many epochs.\n\nWhich change will MOST likely fix this problem?",
+  options: [
+    "Use ReLU activations and add batch normalization or residual connections to the network.",
+    "Add more sigmoid layers so that the network has more capacity to learn the patterns.",
+    "Lower the learning rate by a factor of 100 so that each update step is even smaller.",
+    "Remove all normalization from the input features so that the inputs have larger values."
+  ],
+  answer: [0],
+  explanation: "Sigmoid activations squash values and their gradients shrink as they pass back through many layers (vanishing gradients). ReLU activations keep stronger gradients, and batch normalization or residual connections help gradients reach early layers.\n\nMore sigmoid layers make the problem worse. A smaller learning rate slows learning further. Unnormalized inputs push sigmoids into saturation, which also shrinks gradients.",
+  refs: []
+},
+{
+  id: 'M334', domain: 2, type: 'single',
+  stem: "An auditor asks an ML team to prove which dataset version, processing job and training job produced the credit model currently deployed to production, and which endpoints use that model. The team trained and deployed the model with SageMaker AI.\n\nWhich capability should the team use to answer these questions?",
+  options: [
+    "SageMaker ML Lineage Tracking, which links datasets, jobs, model artifacts and endpoints to each other.",
+    "SageMaker Debugger, which records tensors and system metrics captured during each training job that was run.",
+    "SageMaker Ground Truth, which records which workers labeled each item that was used in the training dataset.",
+    "SageMaker Clarify, which records the bias metrics that were calculated for the model before its deployment."
+  ],
+  answer: [0],
+  explanation: "SageMaker ML Lineage Tracking creates and stores entities and associations for the steps of a workflow, so the team can trace a deployed model back to its training job, processing job and dataset, and forward to the endpoints that use it.\n\nDebugger records training internals. Ground Truth records labeling work. Clarify records bias and explainability results. None of them gives the end-to-end lineage the auditor needs.",
+  refs: []
+},
+
+/* ---------------- Domain 3: Deployment and Orchestration (16) ---------------- */
+{
+  id: 'M335', domain: 3, type: 'single',
+  stem: "A team trained a scikit-learn preprocessing step that scales and encodes raw features, and a separate XGBoost model that uses the processed features. Client applications should send raw records and receive predictions with one call, and the preprocessing at inference must be identical to training.\n\nWhich deployment approach meets these requirements?",
+  options: [
+    "Deploy a SageMaker AI inference pipeline with the scikit-learn container followed by the XGBoost container.",
+    "Deploy the XGBoost model alone and ask each client application to reimplement the preprocessing in its own code.",
+    "Deploy the two models to a multi-model endpoint and have the clients call each model separately in the right order.",
+    "Deploy the preprocessing step to AWS Lambda and the model to Amazon EC2, and connect them through an Amazon SQS queue."
+  ],
+  answer: [0],
+  explanation: "An inference pipeline chains containers on one endpoint: the request goes through the fitted scikit-learn preprocessing first and the output is passed to XGBoost. Clients make one call, and the same fitted preprocessing is used as in training.\n\nReimplementing preprocessing in each client invites training-serving skew. Two separate calls to a multi-model endpoint push orchestration to clients. A Lambda, SQS and EC2 design adds latency and infrastructure.",
+  refs: []
+},
+{
+  id: 'M336', domain: 3, type: 'single',
+  stem: "A manufacturer wants to run a defect detection model on 500 cameras in factories with unreliable internet connections. Predictions must run locally on small ARM-based devices with low latency, and the company needs a way to deploy model updates to all devices.\n\nWhich solution meets these requirements?",
+  options: [
+    "Compile the model for the device hardware with SageMaker Neo and deploy it as an AWS IoT Greengrass component.",
+    "Host the model on a SageMaker AI real-time endpoint and have every camera send each image to the endpoint over the internet.",
+    "Run the model in AWS Lambda functions in the cloud and call them from the cameras whenever an image is captured on the line.",
+    "Copy the uncompiled training checkpoint to each device by USB drive and run it with the full training framework installed."
+  ],
+  answer: [0],
+  explanation: "SageMaker Neo compiles models into an optimized form for specific edge hardware such as ARM processors. AWS IoT Greengrass deploys and updates software components, including models, on fleets of edge devices, and runs them locally even when connectivity is poor.\n\nCloud endpoints and Lambda functions depend on reliable internet. Manual USB updates and full training frameworks on small devices are slow and hard to manage.",
+  refs: []
+},
+{
+  id: 'M337', domain: 3, type: 'single',
+  stem: "A team has a small scikit-learn model (40 MB) that scores loan pre-qualification requests. Traffic is unpredictable, from zero requests for hours to short bursts, and each prediction takes under 100 ms. The team wants to pay nothing when there is no traffic and already runs its APIs on AWS Lambda.\n\nWhich deployment option is the MOST cost-effective?",
+  options: [
+    "Package the model and its dependencies in an AWS Lambda function, using a container image if needed.",
+    "Deploy the model to a SageMaker AI real-time endpoint on a GPU instance with a minimum count of two instances.",
+    "Run the model on an Amazon EC2 instance in an Auto Scaling group with a minimum size of one instance at all times.",
+    "Deploy the model to a SageMaker AI asynchronous endpoint and have callers poll Amazon S3 for every prediction result."
+  ],
+  answer: [0],
+  explanation: "Lambda runs code only when invoked and charges per request and duration, so idle time costs nothing. A small model with fast predictions fits within Lambda's limits, and container images up to 10 GB support larger dependencies.\n\nA GPU endpoint and an always-on EC2 instance charge for idle time. An asynchronous endpoint is designed for large, long-running requests and adds polling latency.",
+  refs: []
+},
+{
+  id: 'M338', domain: 3, type: 'order',
+  stem: "An ML engineer is explaining to a new team member how the company's RAG assistant answers a user's question at query time, using Amazon Bedrock Knowledge Bases.\n\nArrange the steps in the order in which they happen.",
+  items: [
+    "Convert the user's question into a vector with the same embedding model used for the documents",
+    "Run a similarity search in the vector store to find the most relevant chunks",
+    "Rerank the retrieved chunks so that the most relevant ones come first",
+    "Add the top chunks to the prompt as context together with the user's question",
+    "Generate the answer with the foundation model and return it with citations to the source chunks"
+  ],
+  explanation: "The question must be embedded before it can be compared with the stored vectors. The similarity search returns candidate chunks, an optional reranking step reorders them, the best chunks are inserted into the prompt, and the model generates a grounded answer that cites its sources.",
+  refs: []
+},
+{
+  id: 'M339', domain: 3, type: 'single',
+  stem: "A company fine-tuned a model in Amazon Bedrock for claims summarization. The production application has a steady, high volume of requests during business hours and requires consistent, guaranteed throughput for this custom model.\n\nWhat should the ML engineer do to serve the custom model in production?",
+  options: [
+    "Purchase Provisioned Throughput for the custom model and invoke it through the provisioned model ARN.",
+    "Invoke the base model on demand, because the fine-tuned weights are applied automatically to every request.",
+    "Export the custom model to an Amazon S3 bucket and host it on an AWS Lambda function with a large memory size.",
+    "Use Amazon Bedrock batch inference for every live request so that the application gets results within seconds."
+  ],
+  answer: [0],
+  explanation: "Provisioned Throughput reserves dedicated model units for a model, giving consistent throughput, and is the standard way to serve customized models in Amazon Bedrock for steady production traffic. The application invokes the provisioned model's ARN.\n\nThe base model does not include the fine-tuned weights. Bedrock custom models are not exported for hosting on Lambda. Batch inference is asynchronous and unsuited to live requests.",
+  refs: ['https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html']
+},
+{
+  id: 'M340', domain: 3, type: 'single',
+  stem: "A company is building an agent with Amazon Bedrock Agents. When the agent decides to check an order, the call to the order system must be made by the company's existing web application backend, which already has the right network access and user session, rather than by an AWS Lambda function.\n\nHow should the ML engineer configure the action group?",
+  options: [
+    "Configure the action group to return control, so the application receives the action and parameters, calls the API and returns the result.",
+    "Configure the action group with a Lambda function that stores the user's session password and calls the order system directly from AWS.",
+    "Attach a knowledge base that contains a nightly export of all orders, so that the agent never needs to call the order system during a conversation.",
+    "Add the order system's API URL and credentials to the agent's instructions so that the foundation model calls the API by itself."
+  ],
+  answer: [0],
+  explanation: "With return of control, the agent does not invoke a Lambda function. Instead it returns the chosen action and parameters in the response, the calling application executes the API call in its own context, and then sends the result back to the agent to continue.\n\nA Lambda function holding session passwords is insecure and not what was asked. A nightly export is stale. A model cannot make network calls from instructions, and putting credentials in prompts is unsafe.",
+  refs: []
+},
+{
+  id: 'M341', domain: 3, type: 'single',
+  stem: "A procurement agent must collect prices from several supplier websites that have no APIs. The agent needs to open pages, log in, fill in search forms and read the results, and the security team requires that this browsing runs in an isolated, managed environment rather than on the agent's own servers.\n\nWhich solution meets these requirements?",
+  options: [
+    "Use the Amazon Bedrock AgentCore Browser tool so the agent controls a managed, isolated browser session.",
+    "Give the agent a knowledge base containing screenshots of the supplier websites taken once each month.",
+    "Install a headless browser on the agent's application servers and run it with the servers' own IAM role.",
+    "Ask each supplier to email a weekly price list and store the attachments in Amazon S3 for the agent to read."
+  ],
+  answer: [0],
+  explanation: "AgentCore Browser provides a managed, isolated browser runtime that agents can control to navigate websites, fill forms and read content, with observability and without running browser infrastructure.\n\nMonthly screenshots are stale and cannot be interacted with. A headless browser on the agent's own servers is the setup the security team wants to avoid. Weekly emailed lists do not meet the requirement to collect prices from the sites.",
+  refs: []
+},
+{
+  id: 'M342', domain: 3, type: 'single',
+  stem: "A Python development team wants to build agents quickly with an open-source SDK in which they define a model, a system prompt and a list of tools in a few lines of code. The SDK should work with models in Amazon Bedrock and other providers, and the agents should be deployable to Amazon Bedrock AgentCore Runtime.\n\nWhich option meets these requirements?",
+  options: [
+    "Strands Agents SDK",
+    "AWS Step Functions Express workflows",
+    "Amazon Lex V2 bot definitions",
+    "AWS Glue interactive sessions"
+  ],
+  answer: [0],
+  explanation: "Strands Agents is an open-source, model-driven SDK for building agents in a few lines of Python with a model, a prompt and tools. It supports Amazon Bedrock and other model providers, and agents built with it can be deployed to AgentCore Runtime.\n\nStep Functions orchestrates workflows, Lex builds intent-based conversational bots, and Glue interactive sessions run Spark for data preparation. None is an agent SDK.",
+  refs: []
+},
+{
+  id: 'M343', domain: 3, type: 'multi',
+  stem: "An ML team runs a SageMaker Pipelines workflow every night: an expensive feature engineering step, then training and evaluation. Each night only the training data's S3 path and the training instance type change, and the feature engineering inputs are often unchanged. The pipeline definition is currently copied and edited for each run.\n\nWhich actions will make the runs easier to manage and avoid unnecessary work? (Select TWO.)",
+  options: [
+    "Define pipeline parameters for the data path and instance type, and pass their values when starting each execution.",
+    "Turn on step caching for the feature engineering step so that it is skipped when its inputs and arguments are unchanged.",
+    "Create a separate pipeline definition for every night's run so that each one has a fixed data path.",
+    "Remove the evaluation step so that the pipeline finishes faster on nights when the data has not changed.",
+    "Run every step on the largest available instance type so that the expensive steps finish sooner."
+  ],
+  answer: [0, 1],
+  explanation: "Pipeline parameters let one pipeline definition run with different values, such as data paths and instance types, set at execution time. Step caching reuses the results of a previous successful step run when the step's inputs and configuration have not changed, avoiding repeated expensive work.\n\nSeparate definitions per night are what the team wants to stop. Removing evaluation weakens quality checks. Larger instances cost more and still repeat unchanged work.",
+  refs: ['https://docs.aws.amazon.com/sagemaker/latest/dg/pipelines-caching.html']
+},
+{
+  id: 'M344', domain: 3, type: 'single',
+  stem: "A data platform team already has Apache Spark jobs for large-scale feature engineering that run on an existing Amazon EMR cluster. The ML team wants one SageMaker Pipelines workflow that runs this Spark job and then trains a model on its output, without rewriting the Spark code.\n\nWhich solution meets these requirements?",
+  options: [
+    "Add an EMR step to the SageMaker pipeline that submits the existing Spark job, followed by the training step.",
+    "Rewrite the Spark job in pandas and run it inside the training script so that only one step is needed in the pipeline.",
+    "Run the Spark job manually each morning and start the SageMaker pipeline by hand after confirming that it finished.",
+    "Replace the EMR cluster with an AWS Lambda function that runs the Spark job for each partition of the input data."
+  ],
+  answer: [0],
+  explanation: "SageMaker Pipelines includes an EMR step that submits a step to an Amazon EMR cluster and waits for it to finish, so existing Spark jobs can be part of the pipeline before training.\n\nRewriting in pandas may not scale and changes code that already works. Manual starts are not automated. Lambda cannot run Spark jobs for large-scale processing.",
+  refs: []
+},
+{
+  id: 'M345', domain: 3, type: 'single',
+  stem: "When a reviewer approves a model version in the SageMaker Model Registry, the company wants an AWS CodePipeline deployment pipeline to start automatically and deploy that version to staging. Today, an engineer starts the deployment manually after checking the registry.\n\nWhich solution meets this requirement?",
+  options: [
+    "Create an Amazon EventBridge rule that matches model package state changes to Approved and targets the CodePipeline pipeline.",
+    "Schedule an AWS Lambda function every hour that lists all model packages and starts CodePipeline if any model exists in the registry.",
+    "Turn on AWS CloudTrail for the account and ask the engineer to check the trail each morning for new approval events.",
+    "Configure an Amazon S3 Lifecycle rule on the artifact bucket that starts CodePipeline when a new model.tar.gz file is written."
+  ],
+  answer: [0],
+  explanation: "The Model Registry emits an EventBridge event when a model package's approval status changes. A rule that matches the Approved status can start the CodePipeline pipeline directly, so deployment begins as soon as a version is approved.\n\nAn hourly Lambda that starts deployment whenever any model exists ignores approval. Checking CloudTrail by hand is still manual. S3 Lifecycle rules manage storage classes and expiration and cannot start pipelines.",
+  refs: []
+},
+{
+  id: 'M346', domain: 3, type: 'single',
+  stem: "A company serves a large model on a SageMaker AI real-time endpoint that uses 20 GPU instances. A blue/green deployment would temporarily need 20 more GPU instances, which the account cannot get. The company still wants to update the model safely with automatic rollback if alarms fire.\n\nWhich deployment approach meets these requirements?",
+  options: [
+    "Use a rolling deployment that updates the endpoint in batches and rolls back automatically on CloudWatch alarms.",
+    "Use a blue/green deployment with all-at-once traffic shifting to a new fleet of 20 GPU instances in one single step.",
+    "Delete the existing endpoint and create a new endpoint with the new model during a planned maintenance window.",
+    "Use shadow testing and send copies of all production traffic to a second fleet of 20 GPU instances for a week."
+  ],
+  answer: [0],
+  explanation: "Rolling deployments replace the old fleet in batches, so only a fraction of extra capacity is needed at any time. Deployment guardrails watch CloudWatch alarms and roll back automatically if a batch causes problems.\n\nBlue/green and shadow testing both need a full second fleet. Deleting and recreating the endpoint causes downtime and has no automatic rollback.",
+  refs: []
+},
+{
+  id: 'M347', domain: 3, type: 'single',
+  stem: "A financial company's SageMaker AI build environments and pipelines run in private subnets with no internet access. Training and processing jobs need Python packages from public repositories, and the security team wants to approve and cache the packages in a private repository that the jobs can reach.\n\nWhich solution meets these requirements?",
+  options: [
+    "Use AWS CodeArtifact with an upstream connection to the public repository, reached through a VPC endpoint.",
+    "Add a NAT gateway so that every job downloads its packages directly from the public internet at the start of each run.",
+    "Ask developers to copy the packages from their laptops into each job's working directory before every run.",
+    "Store the packages in an Amazon DynamoDB table and install them from the table at the start of each job."
+  ],
+  answer: [0],
+  explanation: "AWS CodeArtifact is a managed artifact repository that can proxy and cache packages from public repositories such as PyPI. Jobs in private subnets reach it through a VPC endpoint, and the security team controls which packages are available.\n\nA NAT gateway opens internet access the policy forbids. Copying packages from laptops is manual and unreliable. DynamoDB is not a package repository.",
+  refs: []
+},
+{
+  id: 'M348', domain: 3, type: 'single',
+  stem: "A SageMaker AI real-time endpoint currently runs on ml.c5.2xlarge instances. Load tests show that ml.c6i.2xlarge gives lower latency at a lower price. The endpoint serves customers 24 hours a day, and the change must not cause downtime.\n\nHow should the ML engineer change the instance type?",
+  options: [
+    "Create a new endpoint configuration with ml.c6i.2xlarge and call UpdateEndpoint to move traffic to the new fleet.",
+    "Delete the endpoint, wait for it to be removed, and create it again with the new instance type in the same configuration.",
+    "Stop the existing instances from the Amazon EC2 console and change their instance type to ml.c6i.2xlarge one at a time.",
+    "Edit the existing endpoint configuration in place to use the new instance type and wait for the change to apply on its own."
+  ],
+  answer: [0],
+  explanation: "To change an endpoint, create a new endpoint configuration and call UpdateEndpoint. SageMaker AI provisions the new instances, shifts traffic to them, and then removes the old fleet, so the endpoint stays available.\n\nDeleting and recreating the endpoint causes downtime. Endpoint instances are managed by SageMaker and are not visible in the EC2 console. Endpoint configurations cannot be edited in place.",
+  refs: []
+},
+{
+  id: 'M349', domain: 3, type: 'single',
+  stem: "A healthcare company's prediction endpoint on SageMaker AI is business-critical. During a recent Availability Zone outage, the endpoint, which runs on a single instance, was unavailable for 40 minutes.\n\nWhich change will MOST improve the endpoint's availability?",
+  options: [
+    "Run the production variant with at least two instances so that SageMaker AI places them in different Availability Zones.",
+    "Move the single instance to a larger instance type so that it can recover faster after an outage in its Availability Zone.",
+    "Turn on data capture for the endpoint so that missed requests can be replayed after the zone recovers.",
+    "Enable network isolation on the endpoint so that the instance is protected from Availability Zone failures."
+  ],
+  answer: [0],
+  explanation: "With two or more instances, SageMaker AI distributes them across Availability Zones in the VPC's subnets, so the endpoint keeps serving traffic if one zone fails. AWS recommends multiple instances for production endpoints.\n\nA bigger single instance is still in one zone. Data capture records traffic but does not keep the endpoint available. Network isolation restricts network access and has no effect on zone failures.",
+  refs: []
+},
+{
+  id: 'M350', domain: 3, type: 'single',
+  stem: "A document-processing model runs on a SageMaker AI asynchronous endpoint. Requests arrive in a few large batches each week, and the instances sit idle the rest of the time. The team wants the endpoint to scale to zero instances when the queue is empty and scale out when new requests arrive.\n\nWhich configuration meets this requirement?",
+  options: [
+    "Set the minimum capacity to zero and scale on the endpoint's backlog metrics, such as ApproximateBacklogSizePerInstance.",
+    "Set the minimum capacity to one and use a target tracking policy based on the average CPU utilization of the endpoint's instances.",
+    "Convert the asynchronous endpoint to a real-time endpoint and configure a scheduled action that stops it every evening.",
+    "Delete the endpoint after each batch finishes and ask the users to recreate it themselves before sending the next batch."
+  ],
+  answer: [0],
+  explanation: "Asynchronous endpoints can scale to zero instances. Auto scaling on the queue backlog, including a policy on HasBacklogWithoutCapacity to scale out from zero, adds instances when requests are waiting and removes them when the queue is empty.\n\nA minimum of one instance keeps paying for idle time. A real-time endpoint cannot queue requests or scale to zero. Deleting and recreating the endpoint by hand is unreliable.",
+  refs: ['https://docs.aws.amazon.com/sagemaker/latest/dg/async-inference-autoscale.html']
+},
+
+/* ---------------- Domain 4: Operating, Monitoring and Securing (15) ---------------- */
+{
+  id: 'M351', domain: 4, type: 'match',
+  stem: "An ML operations team has listed four monitoring and governance needs for its SageMaker AI workloads.\n\nSelect the AWS service that BEST meets each need. Each service is used once or not at all.",
+  left: [
+    "Send an alarm when the endpoint's 5XX error rate stays above 1% for 5 minutes",
+    "Find out which IAM role deleted a production model last week",
+    "Continuously flag S3 buckets with training data that do not use default encryption with AWS KMS keys",
+    "Get rightsizing recommendations for EC2 instances that run a self-managed inference server"
+  ],
+  right: [
+    "Amazon CloudWatch",
+    "AWS CloudTrail",
+    "AWS Config",
+    "AWS Compute Optimizer",
+    "Amazon Inspector"
+  ],
+  answer: [0, 1, 2, 3],
+  explanation: "CloudWatch alarms watch metrics such as endpoint errors over a period. CloudTrail records API calls, including DeleteModel, with the caller's identity. AWS Config rules continuously evaluate resource settings such as bucket encryption. Compute Optimizer analyzes EC2 utilization and recommends better-sized instances.\n\nAmazon Inspector scans workloads for software vulnerabilities, which is not one of the listed needs.",
+  refs: []
+},
+{
+  id: 'M352', domain: 4, type: 'single',
+  stem: "A recommendation endpoint's invocation count follows a strong daily and weekly pattern: high in the evenings, low overnight, and higher on weekends. A fixed CloudWatch alarm threshold either fires every evening or misses real drops during the day. The team wants to be alerted when traffic is unusual for that time of day.\n\nWhich solution meets this requirement?",
+  options: [
+    "Create a CloudWatch alarm that uses anomaly detection on the Invocations metric so the threshold follows the expected pattern.",
+    "Create two fixed-threshold alarms, one for day and one for night, and change their thresholds by hand at the start of each month.",
+    "Turn off alarms on the Invocations metric and rely on customer complaints to show when traffic drops below normal levels.",
+    "Create an alarm on the endpoint's CPU utilization with a fixed threshold of 50% and ignore the invocation count altogether."
+  ],
+  answer: [0],
+  explanation: "CloudWatch anomaly detection learns a metric's normal pattern, including daily and weekly cycles, and creates an expected band. Alarms on the band fire only when the value is unusual for that time.\n\nManually adjusted fixed thresholds are hard to maintain and still miss patterns. Relying on complaints means slow detection. CPU utilization does not directly show unusual traffic.",
+  refs: []
+},
+{
+  id: 'M353', domain: 4, type: 'single',
+  stem: "A team retrained its churn model on the last 12 months of data, which include a new product line and new customer segments, and deployed it to the existing endpoint. Since then, the SageMaker Model Monitor data quality schedule reports constraint violations every day, although the new model performs well.\n\nWhat should the team do?",
+  options: [
+    "Run a new baselining job on the new training data and update the monitoring schedule to use the new baseline.",
+    "Delete the monitoring schedule because data quality monitoring is not useful once a model has been retrained.",
+    "Roll back to the previous model so that the live data matches the old baseline again and the violations stop.",
+    "Increase every constraint threshold to its maximum allowed value so that no future violation can ever be reported again."
+  ],
+  answer: [0],
+  explanation: "The baseline describes the data the model was trained on. After retraining on new data, the old baseline no longer reflects what is normal, so a new baseline must be created from the new training data and used by the monitoring schedule.\n\nDeleting monitoring removes protection. Rolling back discards a better model. Maximizing every threshold hides real problems.",
+  refs: []
+},
+{
+  id: 'M354', domain: 4, type: 'single',
+  stem: "A single small XGBoost model runs on a SageMaker AI endpoint that uses one ml.g5.12xlarge instance with four GPUs. CloudWatch shows that GPU utilization averages 6% and latency is far below the target, even during peak traffic.\n\nWhat should the ML engineer do to reduce cost?",
+  options: [
+    "Load-test smaller instance types, such as one-GPU or CPU instances, and move to the cheapest one that meets the latency target.",
+    "Add a second ml.g5.12xlarge instance to the endpoint so that the GPU utilization is spread more evenly across both of the instances.",
+    "Purchase a one-year Savings Plan for the current ml.g5.12xlarge instance without changing the instance type.",
+    "Increase the model's batch size during training so that the endpoint uses more GPU memory at inference time."
+  ],
+  answer: [0],
+  explanation: "Very low GPU utilization with plenty of latency headroom means the instance is oversized. Testing smaller GPU or CPU instances and choosing the cheapest one that still meets the target is rightsizing, often the largest saving.\n\nAdding another instance doubles cost. A Savings Plan lowers the rate but still pays for unused capacity. Training batch size does not affect the inference instance.",
+  refs: []
+},
+{
+  id: 'M355', domain: 4, type: 'single',
+  stem: "An ML team keeps every version of its training datasets in an Amazon S3 Standard bucket for audit purposes. Datasets older than 6 months are almost never read but must be kept for 7 years, and retrieval within 12 hours is acceptable.\n\nWhich solution will reduce storage cost with the LEAST ongoing effort?",
+  options: [
+    "Add an S3 Lifecycle rule that moves objects to S3 Glacier Deep Archive after 180 days and expires them after 7 years.",
+    "Write a monthly script that downloads old datasets to an on-premises file server and deletes them from Amazon S3.",
+    "Move all of the datasets, including the current ones, to S3 One Zone-Infrequent Access on the first day they are created.",
+    "Compress each dataset again every month with a higher compression level and overwrite the original objects in place."
+  ],
+  answer: [0],
+  explanation: "An S3 Lifecycle rule automatically moves objects to cheaper storage classes as they age and can expire them after the retention period. Glacier Deep Archive is the lowest-cost class and fits data that is rarely read and can wait hours for retrieval.\n\nMoving data on premises adds manual work and infrastructure. One Zone-IA for all data affects current datasets and has lower resilience. Repeated recompression is effort with little benefit.",
+  refs: []
+},
+{
+  id: 'M356', domain: 4, type: 'single',
+  stem: "Last month, a misconfigured training loop launched hundreds of SageMaker AI training jobs over a weekend, and the finance team noticed the cost only at month end. The company wants to be alerted automatically when spending on a service rises in an unusual way, without setting fixed thresholds for every service.\n\nWhich solution meets this requirement?",
+  options: [
+    "Set up AWS Cost Anomaly Detection with a monitor for AWS services and an alert subscription to the team.",
+    "Review the AWS Cost and Usage Report manually at the end of each month and look for any unusual charges.",
+    "Create one AWS Budgets fixed budget for the entire account with an alert at 100% of the monthly amount.",
+    "Turn on AWS CloudTrail Insights for the account and wait for it to report on the company's monthly costs."
+  ],
+  answer: [0],
+  explanation: "AWS Cost Anomaly Detection uses machine learning to learn normal spending patterns and alerts subscribers when spend for a service, account or cost category rises unusually, without a fixed threshold for each one.\n\nA monthly manual review is too late. A single account-level budget at 100% fires only once total spend is high. CloudTrail Insights detects unusual API activity, not cost.",
+  refs: []
+},
+{
+  id: 'M357', domain: 4, type: 'single',
+  stem: "A company's security policy requires that all access to the S3 bucket holding ML training data uses encrypted connections (HTTPS). A recent review found that some legacy scripts still use plain HTTP.\n\nHow should the ML engineer enforce the policy?",
+  options: [
+    "Add a bucket policy statement that denies all S3 actions when aws:SecureTransport is false.",
+    "Turn on default encryption with SSE-KMS for the bucket, which also blocks any requests made over plain HTTP.",
+    "Turn on S3 Versioning so that every object written over HTTP is kept as a separate version of the object.",
+    "Turn on S3 Transfer Acceleration so that all uploads to the bucket are routed through edge locations."
+  ],
+  answer: [0],
+  explanation: "The aws:SecureTransport condition key is false for requests made over HTTP. A bucket policy that denies access when it is false rejects every unencrypted connection, whatever the caller's IAM permissions.\n\nDefault encryption protects data at rest but does not block HTTP requests. Versioning keeps object history. Transfer Acceleration speeds up transfers and does not enforce TLS.",
+  refs: []
+},
+{
+  id: 'M358', domain: 4, type: 'single',
+  stem: "A shared SageMaker AI domain hosts data scientists from several client projects. Each user's spaces, training jobs and models are tagged with an owner tag containing the user's name. Compliance requires that users can stop, update or delete only resources that carry their own owner tag.\n\nWhich solution meets this requirement with the LEAST ongoing effort?",
+  options: [
+    "Use attribute-based access control: IAM policies that allow actions only when sagemaker:ResourceTag/owner matches the caller's principal tag.",
+    "Create a separate IAM policy for every user that lists the ARNs of each resource they create, and update the policy after every new job or model.",
+    "Give every user full SageMaker AI access and review the CloudTrail logs each month to find actions taken on other users' resources.",
+    "Create a separate AWS account for every user and copy each project's shared datasets into all of the accounts each night."
+  ],
+  answer: [0],
+  explanation: "Attribute-based access control compares resource tags with tags on the calling principal. One policy that requires the owner tag on the resource to match the caller's principal tag scales to every user and every new resource without edits.\n\nPer-user ARN lists need constant updates. Full access with monthly reviews detects problems after they happen. An account per user with nightly copies adds large operational overhead.",
+  refs: []
+},
+{
+  id: 'M359', domain: 4, type: 'multi',
+  stem: "A SageMaker Studio domain runs in VPC-only mode in private subnets with no internet or NAT gateway. Users can open Studio, but notebook code that creates training jobs fails, and code that calls InvokeEndpoint on an existing endpoint also fails with connection timeouts.\n\nWhich VPC interface endpoints must the ML engineer create to fix these two problems? (Select TWO.)",
+  options: [
+    "An interface endpoint for the SageMaker API (com.amazonaws.region.sagemaker.api)",
+    "An interface endpoint for the SageMaker Runtime (com.amazonaws.region.sagemaker.runtime)",
+    "An interface endpoint for Amazon EC2 Auto Scaling",
+    "An interface endpoint for AWS Trusted Advisor",
+    "An interface endpoint for Amazon Route 53 Resolver DNS Firewall"
+  ],
+  answer: [0, 1],
+  explanation: "In VPC-only mode, calls to AWS services must go through VPC endpoints. CreateTrainingJob is a SageMaker API call, so it needs the sagemaker.api endpoint. InvokeEndpoint goes to the SageMaker Runtime service, so it needs the sagemaker.runtime endpoint. Other endpoints, such as an S3 gateway endpoint, are usually also required for data access.\n\nEC2 Auto Scaling, Trusted Advisor and DNS Firewall endpoints are unrelated to these two failing calls.",
+  refs: []
+},
+{
+  id: 'M360', domain: 4, type: 'single',
+  stem: "A company deploys inference containers from Amazon ECR using the tag prod-approved after security review. An investigation found that a developer pushed an untested image with the same prod-approved tag, which overwrote the reviewed image and was deployed by the next pipeline run.\n\nWhich control will prevent this from happening again?",
+  options: [
+    "Turn on tag immutability for the ECR repository so that an existing image tag cannot be overwritten.",
+    "Turn on ECR lifecycle policies so that untagged images in the repository are deleted automatically after one day.",
+    "Turn on ECR cross-Region replication so that a copy of every image is kept in a second Region.",
+    "Turn on default encryption with an AWS KMS key for the ECR repository that stores the images."
+  ],
+  answer: [0],
+  explanation: "With tag immutability, ECR rejects any push that reuses an existing tag, so the reviewed image behind prod-approved cannot be silently replaced. Teams then promote images with new, unique tags or digests.\n\nLifecycle policies clean up old images. Replication copies images to other Regions. Encryption protects images at rest. None of them prevents a tag from being overwritten.",
+  refs: []
+},
+{
+  id: 'M361', domain: 4, type: 'single',
+  stem: "A retail company's shopping assistant on Amazon Bedrock must never mention three competitor brand names or a list of 40 internal project code names, in either user prompts or model responses.\n\nWhich Amazon Bedrock Guardrails feature meets this requirement MOST directly?",
+  options: [
+    "Word filters with a custom list containing the competitor names and the project code names.",
+    "Contextual grounding checks with a high grounding threshold for every response the model generates.",
+    "Content filters for the hate and violence categories set to the highest available filter strength.",
+    "Sensitive information filters that mask names and addresses detected in the prompts and responses."
+  ],
+  answer: [0],
+  explanation: "Guardrails word filters block exact words and phrases that you list, in both inputs and outputs, which is the direct way to block specific brand names and code names.\n\nGrounding checks verify support in source content. Hate and violence filters address harmful content categories. Sensitive information filters detect PII types, not a custom list of brand and project names.",
+  refs: []
+},
+{
+  id: 'M362', domain: 4, type: 'single',
+  stem: "A children's education app uses a foundation model in Amazon Bedrock to write short stories. The company must make sure that generated stories never contain violent, sexual or hateful content, even if a child's prompt tries to steer the story that way.\n\nWhich configuration meets this requirement?",
+  options: [
+    "Apply an Amazon Bedrock guardrail with high-strength content filters for violence, sexual content and hate on prompts and responses.",
+    "Set the temperature to 0 so that the model always produces the same safe and predictable story for every prompt that it receives.",
+    "Add the sentence \"Write a safe story\" to the end of every prompt and do not apply any other control to the output.",
+    "Turn on model invocation logging and have a reviewer read a random sample of the generated stories at the end of each week."
+  ],
+  answer: [0],
+  explanation: "Guardrails content filters detect and block harmful categories such as violence, sexual content and hate in both user prompts and model responses, with adjustable strength. High strength gives the strictest filtering suited to a children's app.\n\nTemperature 0 makes output more deterministic but does not filter content. A prompt instruction is not an enforceable control. Weekly sampling detects problems only after children have seen them.",
+  refs: []
+},
+{
+  id: 'M363', domain: 4, type: 'single',
+  stem: "A company writes Amazon Bedrock model invocation logs to Amazon CloudWatch Logs for troubleshooting. The security team found that customer email addresses and credit card numbers from prompts appear in these logs, which many engineers can read.\n\nHow can the team keep useful logs while protecting this data with the LEAST effort?",
+  options: [
+    "Attach a CloudWatch Logs data protection policy to the log group to detect and mask the sensitive data.",
+    "Turn off model invocation logging completely and troubleshoot problems without any record of requests.",
+    "Export the logs to Amazon S3 every night and run a custom script that removes sensitive values from the files.",
+    "Move the log group to a different AWS Region so that fewer engineers have access to the stored log events."
+  ],
+  answer: [0],
+  explanation: "CloudWatch Logs data protection policies use managed data identifiers to detect sensitive data, such as email addresses and credit card numbers, in log events and mask it. Only principals with special permission can view the unmasked values.\n\nTurning off logging removes troubleshooting data. A nightly export script leaves the data exposed in CloudWatch and adds code. Moving Regions does not protect the data.",
+  refs: []
+},
+{
+  id: 'M364', domain: 4, type: 'single',
+  stem: "An ML engineer deployed a new model version to a SageMaker AI real-time endpoint. The endpoint shows InService, but every request returns a 5XX error with a ModelError message. The engineer needs to see the exception raised by the inference code.\n\nWhere should the engineer look FIRST?",
+  options: [
+    "In the CloudWatch Logs log group /aws/sagemaker/Endpoints/<endpoint-name>, which holds the container's output.",
+    "In AWS CloudTrail, which records the full stack trace of every exception raised inside the model container at runtime.",
+    "In AWS Config, which keeps the history of configuration changes made to the endpoint and its variants.",
+    "In AWS Trusted Advisor, which reports errors and exceptions found in custom inference code on SageMaker AI."
+  ],
+  answer: [0],
+  explanation: "SageMaker AI sends the inference container's stdout and stderr to CloudWatch Logs in the /aws/sagemaker/Endpoints/<endpoint-name> log group, where stack traces from the inference code appear.\n\nCloudTrail records API calls, not exceptions inside containers. AWS Config records configuration history. Trusted Advisor checks best practices and does not read application errors.",
+  refs: []
+},
+{
+  id: 'M365', domain: 4, type: 'single',
+  stem: "A company's agents use several AWS Lambda functions as tools. A security audit found that some functions include outdated open-source libraries with known vulnerabilities. The security team wants these functions scanned automatically and continuously, including when new vulnerabilities are published.\n\nWhich solution meets this requirement?",
+  options: [
+    "Turn on Amazon Inspector Lambda standard scanning so that the functions' packages are scanned continuously.",
+    "Turn on Amazon Macie for the account so that it scans the Lambda deployment packages for software vulnerabilities.",
+    "Turn on Amazon GuardDuty Lambda protection so that it updates the vulnerable libraries in each function automatically.",
+    "Turn on AWS CloudTrail data events for Lambda so that every invocation is checked for vulnerable library versions."
+  ],
+  answer: [0],
+  explanation: "Amazon Inspector scans Lambda functions and their layers for software vulnerabilities in package dependencies, and rescans them automatically when functions change or new vulnerabilities are published.\n\nMacie finds sensitive data in S3. GuardDuty Lambda protection monitors network activity for threats and does not patch libraries. CloudTrail data events log invocations but do not scan code.",
+  refs: []
+}
+];
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+var $ = function(s){ return document.querySelector(s); };
+var esc = function(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+var paras = function(s){ return String(s).split(/\n\s*\n/).map(function(p){ return '<p>' + esc(p).replace(/\n/g,'<br>') + '</p>'; }).join(''); };
+var WORDS = ['ZERO','ONE','TWO','THREE','FOUR','FIVE','SIX'];
+var LETTERS = 'ABCDEFGH';
+function range(n){ var a=[]; for(var i=0;i<n;i++) a.push(i); return a; }
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function fmtHMS(ms){ var s=Math.max(0,Math.ceil(ms/1000)); var h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return [h,m,x].map(function(v){return String(v).padStart(2,'0');}).join(':'); }
+function fmtDur(ms){ var s=Math.max(0,Math.round(ms/1000)); var h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return (h? h+'h ':'') + m + 'm ' + String(x).padStart(2,'0') + 's'; }
+var store = {
+  get:function(k){ try{ return sessionStorage.getItem(k); }catch(e){ return null; } },
+  set:function(k,v){ try{ sessionStorage.setItem(k,v); }catch(e){} },
+  del:function(k){ try{ sessionStorage.removeItem(k); }catch(e){} }
+};
+var ATTEMPT_KEY = 'k21-' + EXAM.code + '-attempt';
+var ICON_FLAG = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 1.5a.75.75 0 0 1 .75.75V3h8.6a.6.6 0 0 1 .47.97L11 6.5l1.82 2.53a.6.6 0 0 1-.47.97h-8.6v4.25a.75.75 0 0 1-1.5 0V2.25A.75.75 0 0 1 3 1.5Z"/></svg>';
+var ICON_STRIKE = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10"/><path d="M5.5 4.5c.6-1 1.6-1.5 2.7-1.5 1.5 0 2.6.8 2.8 2"/><path d="M10.5 11.2c-.5 1.1-1.5 1.8-2.8 1.8-1.4 0-2.5-.7-2.9-1.8"/></svg>';
+var ICON_UP = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg>';
+var ICON_DOWN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
+
+function need(q){ return q.src.type === 'multi' ? q.src.answer.length : 1; }
+function isAnswered(q){
+  var t = q.src.type;
+  if (t === 'single' || t === 'multi') return q.sel.length === need(q);
+  if (t === 'order') return q.touched;
+  if (t === 'match') return q.match.every(function(v){ return v !== -1; });
+  return false;
+}
+function isStarted(q){
+  var t = q.src.type;
+  if (t === 'single' || t === 'multi') return q.sel.length > 0;
+  if (t === 'order') return q.touched;
+  return q.match.some(function(v){ return v !== -1; });
+}
+function isCorrect(q){
+  var t = q.src.type, a = q.src.answer;
+  if (t === 'single' || t === 'multi'){
+    if (q.sel.length !== a.length) return false;
+    return a.every(function(x){ return q.sel.indexOf(x) !== -1; });
+  }
+  if (t === 'order') return q.touched && q.cur.every(function(v,i){ return v === i; });
+  if (t === 'match') return q.match.every(function(v,i){ return v === a[i]; });
+  return false;
+}
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+var S = null;           // current attempt
+var tickHandle = null;
+var blurTimer = null, fsTimer = null, guardTick = null;
+var fsEntered = false, ignoreBlurUntil = 0;
+var resFilter = 'all';
+
+function examCount(){ return Math.min(EXAM.fullQuestions, QUESTION_BANK.length); }
+function examMinutes(n){ return n >= EXAM.fullQuestions ? EXAM.fullMinutes : Math.max(1, Math.round(n * EXAM.fullMinutes / EXAM.fullQuestions)); }
+
+function buildSession(name){
+  var bank = QUESTION_BANK.slice();
+  if (EXAM.shuffleQuestions) shuffle(bank);
+  bank = bank.slice(0, examCount());
+  var qs = bank.map(function(src){
+    var q = { src: src, flagged: false, touched: false };
+    if (src.type === 'single' || src.type === 'multi'){
+      q.perm = range(src.options.length); if (EXAM.shuffleOptions) shuffle(q.perm);
+      q.sel = []; q.struck = [];
+    } else if (src.type === 'order'){
+      var p = range(src.items.length);
+      do { shuffle(p); } while (p.length > 1 && p.every(function(v,i){ return v === i; }));
+      q.cur = p;
+    } else if (src.type === 'match'){
+      q.match = src.left.map(function(){ return -1; });
+    }
+    return q;
+  });
+  var minutes = examMinutes(qs.length);
+  var now = Date.now();
+  S = { name: name, qs: qs, idx: 0, view: 'question', reviewList: null, reviewLabel: '',
+        start: now, deadline: now + minutes * 60000, minutes: minutes,
+        ended: false, endKind: null, reason: '', endTime: 0, warned: {} };
+}
+function active(){ return !!(S && !S.ended); }
+
+/* =====================================================================
+   START SCREEN
+   ===================================================================== */
+function initStart(){
+  $('#examCode').textContent = EXAM.code;
+  $('#examName').textContent = EXAM.name;
+  $('#mockLabel').textContent = EXAM.mockTitle;
+  $('#fsGrace').textContent = EXAM.fullscreenGraceSec;
+  var n = examCount(), m = examMinutes(n);
+  $('#fQ').textContent = n;
+  $('#fT').innerHTML = m + ' <small>min</small>';
+  var per = m * 60 / n; $('#fP').innerHTML = Math.floor(per/60) + ':' + String(Math.round(per%60)).padStart(2,'0') + ' <small>per Q</small>';
+  if (n < EXAM.fullQuestions){
+    $('#sampleNote').innerHTML = '<div class="notice info"><strong>Sample build.</strong> This version has ' + n + ' sample questions, so the timer is set to ' + m + ' minutes, the same pace as the real exam (' + EXAM.fullQuestions + ' questions in ' + EXAM.fullMinutes + ' minutes). The full mock test uses all ' + EXAM.fullQuestions + ' questions.</div>';
+  }
+  $('#domainList').innerHTML = Object.keys(DOMAINS).map(function(k){
+    var d = DOMAINS[k];
+    return '<div class="dom"><span class="dn">D' + k + '</span><div><div class="dname">' + esc(d.name) + '</div><div class="dbar"><i style="width:' + (d.weight/30*100) + '%"></i></div></div><span class="dpct">' + d.weight + '%</span></div>';
+  }).join('');
+  var types = {};
+  QUESTION_BANK.forEach(function(q){ types[q.type] = true; });
+  var labels = { single:'Multiple choice (one answer)', multi:'Multiple response (two or more)', order:'Ordering', match:'Matching' };
+  $('#typeList').innerHTML = ['single','multi','order','match'].filter(function(t){ return types[t]; }).map(function(t){ return '<span class="chip">' + labels[t] + '</span>'; }).join('');
+
+  var prev = store.get(ATTEMPT_KEY);
+  if (prev === 'active'){
+    $('#prevAttempt').innerHTML = '<div class="notice bad">Your previous attempt was ended because the page was refreshed or closed during the exam. Start a new attempt when you are ready.</div>';
+    store.del(ATTEMPT_KEY);
+  }
+}
+
+function show(id){
+  ['start','exam','results'].forEach(function(n){ $('#screen-' + n).hidden = (n !== id); });
+}
+
+$('#startBtn').addEventListener('click', function(){
+  var name = $('#candName').value.trim();
+  var err = $('#startErr');
+  if (!name){ err.textContent = 'Enter your name to start the exam.'; $('#candName').focus(); return; }
+  if (!$('#agreeBox').checked){ err.textContent = 'Tick the box to confirm you have read the rules.'; return; }
+  err.textContent = '';
+  startExam(name);
+});
+$('#candName').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('#startBtn').click(); });
+
+function startExam(name){
+  buildSession(name);
+  store.set(ATTEMPT_KEY, 'active');
+  resFilter = 'all';
+  $('#barCode').textContent = EXAM.code;
+  $('#barName').textContent = EXAM.name + ' · ' + EXAM.mockTitle;
+  show('exam');
+  ignoreBlurUntil = Date.now() + 2500;
+  fsEntered = false;
+  try {
+    var el = document.documentElement;
+    var req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req){ var p = req.call(el); if (p && p.catch) p.catch(function(){}); }
+  } catch(e){}
+  render(true);
+  tick();
+  tickHandle = setInterval(tick, 500);
+}
+
+/* =====================================================================
+   RENDERING (exam)
+   ===================================================================== */
+function render(resetScroll){
+  var focusKey = null, a = document.activeElement;
+  if (a && a.dataset){ ['opt','strike','up','down','m','goto','filter'].some(function(k){ if (a.dataset[k] !== undefined){ focusKey = '[data-' + k + '="' + a.dataset[k] + '"]'; return true; } return false; }); if (a.id === 'flagBtn') focusKey = '#flagBtn'; }
+  renderStrip();
+  if (S.view === 'question') renderQuestion(); else renderReview();
+  renderActions();
+  if (resetScroll) $('#pane').scrollTop = 0;
+  if (focusKey){ var f = document.querySelector(focusKey); if (f) f.focus({ preventScroll: true }); }
+}
+
+function counts(){
+  var ans = 0, flg = 0;
+  S.qs.forEach(function(q){ if (isAnswered(q)) ans++; if (q.flagged) flg++; });
+  return { ans: ans, rem: S.qs.length - ans, flag: flg };
+}
+
+function renderStrip(){
+  var c = counts(), n = S.qs.length;
+  $('#sAns').textContent = c.ans; $('#sRem').textContent = c.rem; $('#sFlag').textContent = c.flag;
+  $('#progBar').style.width = (c.ans / n * 100) + '%';
+  $('#qCount').innerHTML = S.view === 'question' ? 'Question <strong>' + (S.idx + 1) + '</strong> of ' + n : '<strong>Review screen</strong> · ' + n + ' questions';
+  var nav = $('#qnav');
+  nav.innerHTML = S.qs.map(function(q, i){
+    var cls = 'qn' + (isAnswered(q) ? ' ans' : '') + (q.flagged ? ' flag' : '') + (S.view === 'question' && i === S.idx ? ' cur' : '');
+    var label = 'Question ' + (i+1) + (isAnswered(q) ? ', answered' : ', not answered') + (q.flagged ? ', flagged' : '');
+    return '<button type="button" class="' + cls + '" data-nav="' + i + '" aria-label="' + label + '"' + (S.view === 'question' && i === S.idx ? ' aria-current="step"' : '') + '>' + (i+1) + '</button>';
+  }).join('');
+  var cur = nav.querySelector('.cur');
+  if (cur){ var target = cur.offsetLeft - nav.clientWidth/2 + cur.offsetWidth/2; nav.scrollLeft = Math.max(0, target); }
+}
+
+function renderQuestion(){
+  var q = S.qs[S.idx], src = q.src, h = '';
+  h += '<article class="q-card">';
+  h += '<div class="q-head"><div class="q-num">Question <b>' + (S.idx+1) + '</b> of ' + S.qs.length + '</div>';
+  h += '<button type="button" class="flag-btn' + (q.flagged ? ' on' : '') + '" id="flagBtn" aria-pressed="' + q.flagged + '">' + ICON_FLAG + (q.flagged ? 'Flagged for review' : 'Flag for review') + '</button></div>';
+  if (src.scenario) h += '<div class="scenario"><h3>Case study</h3>' + paras(src.scenario) + '</div>';
+  h += '<div class="stem">' + paras(src.stem) + '</div>';
+
+  if (src.type === 'single' || src.type === 'multi'){
+    var multi = src.type === 'multi';
+    if (multi) h += '<p class="instr">Select ' + (WORDS[need(q)] || need(q)) + ' answers.</p>';
+    h += '<div class="opts' + (multi ? ' multi' : '') + '" role="' + (multi ? 'group' : 'radiogroup') + '" aria-label="Answer options">';
+    q.perm.forEach(function(oi, pos){
+      var sel = q.sel.indexOf(oi) !== -1, st = q.struck.indexOf(oi) !== -1;
+      h += '<div class="opt' + (sel ? ' sel' : '') + (st ? ' struck' : '') + '">';
+      h += '<button type="button" class="opt-main" data-opt="' + oi + '" role="' + (multi ? 'checkbox' : 'radio') + '" aria-checked="' + sel + '"><span class="mark" aria-hidden="true"></span><span class="letter">' + LETTERS[pos] + '.</span><span class="otext">' + esc(src.options[oi]) + '</span></button>';
+      h += '<button type="button" class="strike" data-strike="' + oi + '" aria-pressed="' + st + '" title="' + (st ? 'Restore option ' : 'Cross out option ') + LETTERS[pos] + '" aria-label="' + (st ? 'Restore option ' : 'Cross out option ') + LETTERS[pos] + '">' + ICON_STRIKE + '</button>';
+      h += '</div>';
+    });
+    h += '</div><p class="hint">Use the strike button on the right of an option to cross it out while you eliminate answers. Crossing out does not affect your score.</p>';
+  } else if (src.type === 'order'){
+    h += '<p class="instr">Put the steps in the correct order using the arrow buttons.</p><ol class="order">';
+    q.cur.forEach(function(ii, pos){
+      h += '<li><span class="pos">' + (pos+1) + '</span><span class="otext">' + esc(src.items[ii]) + '</span><span class="moves">';
+      h += '<button type="button" data-up="' + pos + '" aria-label="Move step up"' + (pos === 0 ? ' disabled' : '') + '>' + ICON_UP + '</button>';
+      h += '<button type="button" data-down="' + pos + '" aria-label="Move step down"' + (pos === q.cur.length-1 ? ' disabled' : '') + '>' + ICON_DOWN + '</button>';
+      h += '</span></li>';
+    });
+    h += '</ol>';
+    if (!q.touched) h += '<p class="hint">This question counts as answered once you move at least one step.</p>';
+  } else if (src.type === 'match'){
+    h += '<p class="instr">Select a match for each item.</p><div class="match">';
+    src.left.forEach(function(l, i){
+      h += '<div class="match-row' + (q.match[i] !== -1 ? ' done' : '') + '"><label for="m-' + src.id + '-' + i + '">' + esc(l) + '</label>';
+      h += '<select id="m-' + src.id + '-' + i + '" data-m="' + i + '"><option value="-1">Select…</option>';
+      src.right.forEach(function(r, j){ h += '<option value="' + j + '"' + (q.match[i] === j ? ' selected' : '') + '>' + esc(r) + '</option>'; });
+      h += '</select></div>';
+    });
+    h += '</div>';
+  }
+  h += '</article>';
+  $('#paneInner').innerHTML = h;
+}
+
+function renderReview(){
+  var c = counts();
+  var inc = S.qs.filter(function(q){ return !isAnswered(q); }).length;
+  var h = '<div class="rv-head"><h2>Review screen</h2><p>Check your progress before you end the exam. Select a question to go to it, or review a group of questions in order.</p></div>';
+  h += '<div class="rv-stats"><div class="rv-stat"><div class="n">' + c.ans + '</div><div class="l">Answered</div></div>';
+  h += '<div class="rv-stat warn"><div class="n">' + inc + '</div><div class="l">Incomplete</div></div>';
+  h += '<div class="rv-stat flag"><div class="n">' + c.flag + '</div><div class="l">Flagged</div></div></div>';
+  h += '<div class="rv-filters"><button type="button" class="btn btn-primary" data-filter="all">Review all</button>';
+  h += '<button type="button" class="btn btn-ghost" data-filter="incomplete"' + (inc ? '' : ' disabled') + '>Review incomplete (' + inc + ')</button>';
+  h += '<button type="button" class="btn btn-ghost" data-filter="flagged"' + (c.flag ? '' : ' disabled') + '>Review flagged (' + c.flag + ')</button></div>';
+  h += '<div class="rv-grid">';
+  S.qs.forEach(function(q, i){
+    var a = isAnswered(q), st = a ? 'Answered' : (isStarted(q) ? 'Incomplete' : 'Not answered');
+    h += '<button type="button" class="rv-tile' + (a ? '' : ' inc') + '" data-goto="' + i + '"><span class="tn">' + (i+1) + '</span><span class="ts">' + st + '</span>' + (q.flagged ? '<span class="tf" title="Flagged" aria-label="Flagged"></span>' : '') + '</button>';
+  });
+  h += '</div>';
+  $('#paneInner').innerHTML = h;
+}
+
+function renderActions(){
+  var h = '';
+  if (S.view === 'question'){
+    var list = S.reviewList, pos = list ? list.indexOf(S.idx) : -1;
+    var atStart = list && pos !== -1 ? pos === 0 : S.idx === 0;
+    var atEnd = list && pos !== -1 ? pos === list.length - 1 : S.idx === S.qs.length - 1;
+    h += '<button type="button" class="btn btn-ghost" id="prevBtn"' + (atStart ? ' disabled' : '') + '>‹ Previous</button>';
+    h += '<button type="button" class="btn btn-primary" id="nextBtn">' + (atEnd ? 'Go to review screen' : 'Next ›') + '</button>';
+    if (list && pos !== -1) h += '<span class="review-chip">' + esc(S.reviewLabel) + ' · ' + (pos+1) + ' of ' + list.length + '</span>';
+    h += '<span class="spacer"></span>';
+    h += '<button type="button" class="btn btn-ghost" id="reviewBtn">Review screen</button>';
+  } else {
+    h += '<button type="button" class="btn btn-ghost" id="backBtn">‹ Back to question ' + (S.idx+1) + '</button><span class="spacer"></span>';
+  }
+  h += '<button type="button" class="btn btn-danger" id="endBtn">End exam</button>';
+  $('#actions').innerHTML = h;
+}
+
+/* =====================================================================
+   NAVIGATION + ANSWERS
+   ===================================================================== */
+function go(i, keepList){
+  if (!keepList){ S.reviewList = null; }
+  S.idx = Math.max(0, Math.min(S.qs.length-1, i));
+  S.view = 'question';
+  render(true);
+}
+function next(){
+  var list = S.reviewList, pos = list ? list.indexOf(S.idx) : -1;
+  if (list && pos !== -1){ if (pos < list.length - 1) go(list[pos+1], true); else showReview(); return; }
+  if (S.idx < S.qs.length - 1) go(S.idx + 1); else showReview();
+}
+function prev(){
+  var list = S.reviewList, pos = list ? list.indexOf(S.idx) : -1;
+  if (list && pos !== -1){ if (pos > 0) go(list[pos-1], true); return; }
+  if (S.idx > 0) go(S.idx - 1);
+}
+function showReview(){ S.view = 'review'; S.reviewList = null; render(true); }
+function startReview(kind){
+  var idx = range(S.qs.length);
+  if (kind === 'incomplete') idx = idx.filter(function(i){ return !isAnswered(S.qs[i]); });
+  if (kind === 'flagged') idx = idx.filter(function(i){ return S.qs[i].flagged; });
+  if (!idx.length) return;
+  S.reviewList = kind === 'all' ? null : idx;
+  S.reviewLabel = kind === 'incomplete' ? 'Reviewing incomplete' : 'Reviewing flagged';
+  go(idx[0], true);
+}
+
+function choose(oi){
+  var q = S.qs[S.idx];
+  var si = q.struck.indexOf(oi);
+  if (q.src.type === 'single'){ q.sel = [oi]; }
+  else {
+    var k = q.sel.indexOf(oi);
+    if (k !== -1) q.sel.splice(k, 1);
+    else {
+      if (q.sel.length >= need(q)){ toast('This question needs ' + WORDS[need(q)].toLowerCase() + ' answers. Clear one choice before selecting another.'); return; }
+      q.sel.push(oi);
+    }
+  }
+  if (q.sel.indexOf(oi) !== -1 && si !== -1) q.struck.splice(si, 1);
+  render();
+}
+function strike(oi){
+  var q = S.qs[S.idx], k = q.struck.indexOf(oi);
+  if (k !== -1) q.struck.splice(k, 1);
+  else { q.struck.push(oi); var s = q.sel.indexOf(oi); if (s !== -1) q.sel.splice(s, 1); }
+  render();
+}
+function move(pos, dir){
+  var q = S.qs[S.idx], to = pos + dir;
+  if (to < 0 || to >= q.cur.length) return;
+  var t = q.cur[pos]; q.cur[pos] = q.cur[to]; q.cur[to] = t;
+  q.touched = true;
+  render();
+  var btn = document.querySelector('[data-' + (dir < 0 ? 'up' : 'down') + '="' + to + '"]') || document.querySelector('[data-' + (dir < 0 ? 'down' : 'up') + '="' + to + '"]');
+  if (btn) btn.focus({ preventScroll: true });
+}
+function toggleFlag(){ var q = S.qs[S.idx]; q.flagged = !q.flagged; render(); }
+
+$('#paneInner').addEventListener('click', function(e){
+  if (!active()) return;
+  var t = e.target.closest('button'); if (!t || t.disabled) return;
+  if (t.dataset.opt !== undefined) return choose(+t.dataset.opt);
+  if (t.dataset.strike !== undefined) return strike(+t.dataset.strike);
+  if (t.dataset.up !== undefined) return move(+t.dataset.up, -1);
+  if (t.dataset.down !== undefined) return move(+t.dataset.down, 1);
+  if (t.dataset.goto !== undefined) return go(+t.dataset.goto);
+  if (t.dataset.filter !== undefined) return startReview(t.dataset.filter);
+  if (t.id === 'flagBtn') return toggleFlag();
+});
+$('#paneInner').addEventListener('change', function(e){
+  if (!active()) return;
+  var s = e.target; if (s.dataset.m === undefined) return;
+  S.qs[S.idx].match[+s.dataset.m] = parseInt(s.value, 10);
+  render();
+});
+$('#qnav').addEventListener('click', function(e){
+  var t = e.target.closest('[data-nav]'); if (!t || !active()) return;
+  go(+t.dataset.nav);
+});
+$('#actions').addEventListener('click', function(e){
+  var t = e.target.closest('button'); if (!t || t.disabled || !active()) return;
+  if (t.id === 'prevBtn') prev();
+  else if (t.id === 'nextBtn') next();
+  else if (t.id === 'reviewBtn') showReview();
+  else if (t.id === 'backBtn') go(S.idx);
+  else if (t.id === 'endBtn') confirmEnd();
+});
+var zoom = 16;
+$('#zoomIn').addEventListener('click', function(){ zoom = Math.min(22, zoom + 1); document.documentElement.style.setProperty('--qsize', zoom + 'px'); });
+$('#zoomOut').addEventListener('click', function(){ zoom = Math.max(14, zoom - 1); document.documentElement.style.setProperty('--qsize', zoom + 'px'); });
+
+/* =====================================================================
+   TIMER
+   ===================================================================== */
+function tick(){
+  if (!active()) return;
+  var left = S.deadline - Date.now();
+  $('#timerVal').textContent = fmtHMS(left);
+  var tm = $('#timer');
+  tm.classList.toggle('warn', left <= 5*60000);
+  tm.classList.toggle('critical', left <= 60000);
+  if (left <= 15*60000 && !S.warned.m15 && S.minutes > 20){ S.warned.m15 = true; toast('15 minutes remaining.'); }
+  if (left <= 5*60000 && !S.warned.m5){ S.warned.m5 = true; toast('5 minutes remaining. Unanswered questions are scored as incorrect.'); }
+  if (left <= 0) finish('time', 'Time expired. Your exam was submitted automatically.');
+}
+
+/* =====================================================================
+   MODALS, TOAST
+   ===================================================================== */
+var toastTimer = null;
+function toast(msg){
+  var t = $('#toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.hidden = true; }, 3800);
+}
+var modalConfirm = null;
+function openModal(o){
+  modalConfirm = o.onConfirm;
+  $('#modalBox').innerHTML = '<h2 id="modalTitle">' + esc(o.title) + '</h2>' + o.body +
+    '<div class="row"><button type="button" class="btn btn-ghost" data-m-act="cancel">' + esc(o.cancel || 'Cancel') + '</button><button type="button" class="btn ' + (o.danger ? 'btn-danger' : 'btn-primary') + '" data-m-act="ok">' + esc(o.ok) + '</button></div>';
+  $('#modal').hidden = false;
+  $('#modalBox').querySelector('[data-m-act="cancel"]').focus();
+}
+function closeModal(){ $('#modal').hidden = true; modalConfirm = null; }
+$('#modal').addEventListener('click', function(e){
+  var b = e.target.closest('[data-m-act]');
+  if (b){ var fn = modalConfirm; closeModal(); if (b.dataset.mAct === 'ok' && fn) fn(); }
+  else if (e.target === $('#modal')) closeModal();
+});
+function confirmEnd(){
+  var c = counts();
+  var inc = c.rem;
+  var body = '<p>' + (inc ? '<strong>' + inc + ' question' + (inc === 1 ? ' is' : 's are') + ' incomplete</strong> and will be scored as incorrect. ' : 'You have answered every question. ') +
+    (c.flag ? c.flag + ' question' + (c.flag === 1 ? ' is' : 's are') + ' still flagged for review. ' : '') +
+    'After you end the exam you cannot change any answers.</p>';
+  openModal({ title: 'End the exam?', body: body, ok: 'End exam', cancel: 'Return to exam', danger: true, onConfirm: function(){ finish('submitted', ''); } });
+}
+
+/* =====================================================================
+   LEAVE DETECTION
+   ===================================================================== */
+function clearGuard(){
+  clearTimeout(blurTimer); clearTimeout(fsTimer); clearInterval(guardTick);
+  blurTimer = fsTimer = guardTick = null;
+  $('#guard').hidden = true;
+}
+function showGuard(kind, secs){
+  var box = $('#guardBox');
+  var title = kind === 'fs' ? 'You left full-screen mode' : 'The exam window lost focus';
+  var msg = kind === 'fs' ? 'Return to full screen now or your exam will end.' : 'Come back to the exam window now or your exam will end.';
+  box.innerHTML = '<h2 id="guardTitle">' + title + '</h2><p>' + msg + '</p><div class="count" id="guardCount">' + secs + '</div>' +
+    (kind === 'fs' ? '<div class="row"><button type="button" class="btn btn-primary" id="guardFs">Return to full screen</button></div>' : '');
+  $('#guard').hidden = false;
+  var left = secs;
+  clearInterval(guardTick);
+  guardTick = setInterval(function(){ left--; var el = $('#guardCount'); if (el) el.textContent = Math.max(0, left); }, 1000);
+  var b = $('#guardFs');
+  if (b){ b.focus(); b.addEventListener('click', function(){ try { var el = document.documentElement; var req = el.requestFullscreen || el.webkitRequestFullscreen; var p = req && req.call(el); if (p && p.catch) p.catch(function(){}); } catch(e){} }); }
+}
+function terminate(reason){ clearGuard(); finish('terminated', reason); }
+
+document.addEventListener('visibilitychange', function(){
+  if (active() && document.visibilityState === 'hidden') terminate('Your exam ended because you switched to another tab or minimized the browser window.');
+});
+window.addEventListener('blur', function(){
+  if (!active() || Date.now() < ignoreBlurUntil || blurTimer) return;
+  showGuard('blur', EXAM.blurGraceSec);
+  blurTimer = setTimeout(function(){ if (active()) terminate('Your exam ended because the exam window lost focus (another app or window was opened).'); }, EXAM.blurGraceSec * 1000);
+});
+window.addEventListener('focus', function(){
+  if (!blurTimer) return;
+  clearTimeout(blurTimer); blurTimer = null;
+  if (!fsTimer){ clearInterval(guardTick); guardTick = null; $('#guard').hidden = true; }
+});
+function onFsChange(){
+  if (!active()) return;
+  var fs = document.fullscreenElement || document.webkitFullscreenElement;
+  if (fs){ fsEntered = true; ignoreBlurUntil = Date.now() + 1500; if (fsTimer){ clearTimeout(fsTimer); fsTimer = null; clearInterval(guardTick); guardTick = null; $('#guard').hidden = true; } return; }
+  if (!fsEntered || fsTimer) return;
+  ignoreBlurUntil = Date.now() + 1500;
+  showGuard('fs', EXAM.fullscreenGraceSec);
+  fsTimer = setTimeout(function(){ if (active()) terminate('Your exam ended because you exited full-screen mode and did not return in time.'); }, EXAM.fullscreenGraceSec * 1000);
+}
+document.addEventListener('fullscreenchange', onFsChange);
+document.addEventListener('webkitfullscreenchange', onFsChange);
+window.addEventListener('beforeunload', function(e){ if (active()){ e.preventDefault(); e.returnValue = ''; return ''; } });
+
+['copy','cut','paste','contextmenu','dragstart'].forEach(function(ev){
+  document.addEventListener(ev, function(e){ if (active() && !(ev === 'paste' && e.target.tagName === 'INPUT')) e.preventDefault(); });
+});
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape' && !$('#modal').hidden){ closeModal(); return; }
+  if (!active()) return;
+  var k = (e.key || '').toLowerCase();
+  if ((e.ctrlKey || e.metaKey) && ['c','x','v','s','p','u','a','f'].indexOf(k) !== -1){ e.preventDefault(); return; }
+  if (e.key === 'F12'){ e.preventDefault(); return; }
+  if (!$('#modal').hidden || !$('#guard').hidden) return;
+  if (S.view === 'question' && e.altKey){
+    if (k === 'n'){ e.preventDefault(); next(); }
+    else if (k === 'p'){ e.preventDefault(); prev(); }
+    else if (k === 'f'){ e.preventDefault(); toggleFlag(); }
+  }
+});
+
+/* =====================================================================
+   FINISH + RESULTS
+   ===================================================================== */
+function finish(kind, reason){
+  if (!S || S.ended) return;
+  S.ended = true; S.endKind = kind; S.reason = reason; S.endTime = Date.now();
+  clearInterval(tickHandle); clearGuard(); closeModal();
+  store.del(ATTEMPT_KEY);
+  try { if (document.fullscreenElement && document.exitFullscreen){ var p = document.exitFullscreen(); if (p && p.catch) p.catch(function(){}); } } catch(e){}
+  renderResults();
+  show('results');
+  $('#screen-results').scrollTop = 0;
+}
+
+function scoreOf(){
+  var n = S.qs.length, correct = 0, dom = {};
+  Object.keys(DOMAINS).forEach(function(k){ dom[k] = { c: 0, t: 0 }; });
+  S.qs.forEach(function(q){ var ok = isCorrect(q); if (ok) correct++; var d = dom[q.src.domain]; if (d){ d.t++; if (ok) d.c++; } });
+  var pct = n ? correct / n : 0;
+  var scaled = Math.round(100 + 900 * pct);
+  return { n: n, correct: correct, pct: pct, scaled: scaled, pass: scaled >= EXAM.passScaled, dom: dom };
+}
+
+function renderResults(){
+  var r = scoreOf(), c = counts();
+  var used = Math.min(S.endTime, S.deadline) - S.start;
+  var h = '';
+  if (S.endKind === 'terminated') h += '<div class="res-banner bad">' + esc(S.reason) + ' Your answers up to that point were scored.</div>';
+  if (S.endKind === 'time') h += '<div class="res-banner time">' + esc(S.reason) + '</div>';
+
+  var fillPct = (r.scaled - 100) / 9, passPct = (EXAM.passScaled - 100) / 9;
+  h += '<section class="card"><div class="score-card"><div>';
+  h += '<span class="verdict ' + (r.pass ? 'pass' : 'fail') + '">' + (r.pass ? 'Pass' : 'Fail') + '</span>';
+  h += '<div class="big-score">' + r.scaled + ' <small>/ 1000</small></div>';
+  h += '<p class="who"><strong>' + esc(S.name) + '</strong> · ' + esc(EXAM.code) + ' ' + esc(EXAM.mockTitle) + ' · ' + new Date(S.endTime).toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' }) + '</p>';
+  h += '</div><div><div class="scale" aria-label="Score ' + r.scaled + ' on a scale of 100 to 1000, pass mark ' + EXAM.passScaled + '"><div class="scale-track"><div class="scale-fill" style="width:' + fillPct + '%;background:' + (r.pass ? 'var(--green)' : 'var(--danger)') + '"></div></div>';
+  h += '<div class="scale-pass" style="left:' + passPct + '%"><span>Pass ' + EXAM.passScaled + '</span></div></div>';
+  h += '<div class="scale-ends"><span>100</span><span>1000</span></div>';
+  h += '<div class="tiles"><div class="tile"><div class="n">' + r.correct + '/' + r.n + '</div><div class="l">Correct</div></div>';
+  h += '<div class="tile"><div class="n">' + Math.round(r.pct * 100) + '%</div><div class="l">Accuracy</div></div>';
+  h += '<div class="tile"><div class="n">' + (r.n - c.ans) + '</div><div class="l">Unanswered</div></div>';
+  h += '<div class="tile"><div class="n" style="font-size:18px">' + fmtDur(used) + '</div><div class="l">Time used</div></div></div>';
+  h += '</div></div><p class="note">The scaled score is estimated from your percentage of correct answers. AWS converts raw results to a 100–1000 scale using its own model across exam forms, and the real exam also contains unscored questions that you cannot identify.</p></section>';
+
+  h += '<section class="card"><h2 class="sec-title">Performance by domain</h2><div class="table-scroll"><table class="dtable"><thead><tr><th>Domain</th><th>Weight</th><th>Score</th><th style="width:22%"></th><th>Result</th></tr></thead><tbody>';
+  Object.keys(DOMAINS).forEach(function(k){
+    var d = r.dom[k], dd = DOMAINS[k];
+    if (!d.t){ h += '<tr><td><strong>D' + k + '.</strong> ' + esc(dd.name) + '</td><td class="num">' + dd.weight + '%</td><td class="num">–</td><td></td><td><span class="comp" style="color:var(--text-3)">No questions</span></td></tr>'; return; }
+    var p = d.c / d.t, ok = p >= 0.7;
+    h += '<tr><td><strong>D' + k + '.</strong> ' + esc(dd.name) + '</td><td class="num">' + dd.weight + '%</td><td class="num">' + d.c + '/' + d.t + ' · ' + Math.round(p*100) + '%</td>';
+    h += '<td><div class="dbar2"><i style="width:' + (p*100) + '%;background:' + (ok ? 'var(--green)' : 'var(--danger)') + '"></i></div></td>';
+    h += '<td><span class="comp ' + (ok ? 'ok' : 'no') + '">' + (ok ? 'Meets competencies' : 'Needs improvement') + '</span></td></tr>';
+  });
+  h += '</tbody></table></div></section>';
+
+  h += '<section class="card"><h2 class="sec-title">Answer review</h2><div class="rr-filters" id="rrFilters"></div><div id="rrList"></div></section>';
+  h += '<div class="res-actions"><button type="button" class="btn btn-green btn-lg" id="retakeBtn">Take the exam again</button></div>';
+  $('#results').innerHTML = h;
+  renderAnswerList();
+}
+
+function renderAnswerList(){
+  var wrong = 0, un = 0, fl = 0;
+  S.qs.forEach(function(q){ if (!isAnswered(q)) un++; else if (!isCorrect(q)) wrong++; if (q.flagged) fl++; });
+  var f = [['all','All (' + S.qs.length + ')'],['wrong','Incorrect (' + wrong + ')'],['un','Unanswered (' + un + ')'],['flag','Flagged (' + fl + ')']];
+  $('#rrFilters').innerHTML = f.map(function(x){ return '<button type="button" data-rf="' + x[0] + '" aria-pressed="' + (resFilter === x[0]) + '">' + x[1] + '</button>'; }).join('');
+  var out = '';
+  S.qs.forEach(function(q, i){
+    var ans = isAnswered(q), ok = isCorrect(q);
+    if (resFilter === 'wrong' && (!ans || ok)) return;
+    if (resFilter === 'un' && ans) return;
+    if (resFilter === 'flag' && !q.flagged) return;
+    var src = q.src;
+    out += '<article class="rr"><div class="rr-top"><span class="qid">Q' + (i+1) + '</span>';
+    out += ok ? '<span class="res-tag c">Correct</span>' : (ans || isStarted(q) ? '<span class="res-tag w">Incorrect</span>' : '<span class="res-tag u">Unanswered</span>');
+    if (q.flagged) out += '<span class="res-tag f">Flagged</span>';
+    out += '<span>Domain ' + src.domain + ' · ' + esc(DOMAINS[src.domain] ? DOMAINS[src.domain].name : '') + '</span></div>';
+    if (src.scenario) out += '<div class="scenario"><h3>Case study</h3>' + paras(src.scenario) + '</div>';
+    out += '<div class="stem">' + paras(src.stem) + '</div>';
+    if (src.type === 'single' || src.type === 'multi'){
+      out += '<div class="ro">';
+      q.perm.forEach(function(oi, pos){
+        var isAns = src.answer.indexOf(oi) !== -1, picked = q.sel.indexOf(oi) !== -1;
+        var cls = isAns ? 'ok' : (picked ? 'bad' : 'plain');
+        var ic = isAns ? '✓' : (picked ? '✗' : '');
+        out += '<div class="' + cls + '"><span class="ic">' + ic + '</span><span>' + LETTERS[pos] + '. ' + esc(src.options[oi]) + (picked ? ' <em>(your answer)</em>' : '') + '</span></div>';
+      });
+      out += '</div>';
+    } else if (src.type === 'order'){
+      out += '<div class="cmp"><div><h4>Your order</h4>' + (q.touched ? '<ol>' + q.cur.map(function(ii, pos){ return '<li style="color:' + (ii === pos ? 'var(--green-dark)' : 'var(--danger)') + '">' + esc(src.items[ii]) + '</li>'; }).join('') + '</ol>' : '<p style="color:var(--text-3);font-size:14px">Not answered</p>') + '</div>';
+      out += '<div><h4>Correct order</h4><ol>' + src.items.map(function(it){ return '<li>' + esc(it) + '</li>'; }).join('') + '</ol></div></div>';
+    } else if (src.type === 'match'){
+      out += '<div class="ro">';
+      src.left.forEach(function(l, i2){
+        var yours = q.match[i2], good = yours === src.answer[i2];
+        out += '<div class="' + (good ? 'ok' : 'bad') + '"><span class="ic">' + (good ? '✓' : '✗') + '</span><span><strong>' + esc(l) + '</strong><br>Your match: ' + (yours === -1 ? 'none' : esc(src.right[yours])) + (good ? '' : ' · Correct: ' + esc(src.right[src.answer[i2]])) + '</span></div>';
+      });
+      out += '</div>';
+    }
+    out += '<div class="expl"><strong>Explanation</strong>' + paras(src.explanation || '');
+    if (src.refs && src.refs.length) out += '<p>References: ' + src.refs.map(function(u){ return '<a href="' + esc(u) + '" target="_blank" rel="noopener">' + esc(u) + '</a>'; }).join('<br>') + '</p>';
+    out += '</div></article>';
+  });
+  $('#rrList').innerHTML = out || '<p style="color:var(--text-3)">No questions in this view.</p>';
+}
+
+$('#results').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.rf){ resFilter = b.dataset.rf; renderAnswerList(); return; }
+  if (b.id === 'retakeBtn'){
+    $('#agreeBox').checked = false;
+    $('#candName').value = S ? S.name : '';
+    $('#prevAttempt').innerHTML = '';
+    S = null;
+    show('start');
+    $('#screen-start').scrollTop = 0;
+  }
+});
+
+initStart();
+})();
+</script>
+</body>
+</html>
